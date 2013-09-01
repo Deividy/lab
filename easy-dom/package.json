@@ -1,0 +1,11 @@
+{
+  "name": "belezaEstetica",
+  "version": "0.0.1",
+  "description": "",
+  "main": "app.js",
+  "dependencies": {
+    "express": ">=3.x",
+    "jade": ""
+  },
+  "private": true
+}

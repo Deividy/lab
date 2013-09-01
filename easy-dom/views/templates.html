@@ -1,0 +1,17 @@
+<script type='text/template' id='tpl-button'>
+    <button type='button' <%= id ? "id='" + id + "'" : '' %> class='btn <%= className %>'>
+        <% if (icon.position === 'left') { %>
+            <i class='<%= icon.className %>'></i>
+        <% } %>
+        <%= label %>
+        <% if (icon.position === 'right') { %>
+            <i class='<%= icon.className %>'></i>
+        <% } %>
+    </button>
+</script>
+<script type='text/template' id='tpl-toolbar'>
+    <div class='toolbar' id='<%= id %>'>
+        <div class='<%= classLeft %>'></div>
+        <div class='<%= classRight %>'></div>
+    </div>
+</script>

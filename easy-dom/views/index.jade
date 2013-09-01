@@ -1,0 +1,44 @@
+!!! 5
+html
+    head
+        title easy-dom
+
+        link(href="/lib/font-awesome/css/font-awesome.css", rel="stylesheet", media="screen")
+        link(href="/lib/bootstrap-3.0.0/css/pygments-manni.css", rel="stylesheet", media="screen")
+        link(href="/lib/bootstrap-3.0.0/css/bootstrap.min.css", rel="stylesheet", media="screen")
+        link(href="/lib/bootstrap-3.0.0/css/bootstrap-theme.min.css", rel="stylesheet", media="screen")
+
+        script(type='text/javascript', src='/lib/jquery-1.10.2.min.js')
+        script(type='text/javascript', src='/lib/underscore-min.js')
+        script(type='text/javascript', src='/lib/bootstrap-3.0.0/js/bootstrap.min.js')
+        script(type='text/javascript', src='/scripts/elements.js')
+        script(type='text/javascript', src='/scripts/app.js')
+
+        style.
+            .left-position {
+                width:45%;
+                float: left;
+                border-right:2px solid #CCC;
+            }
+            .right-position {
+                width: 45%;
+                float: right;
+                border-left: 2px solid #CCC;
+                text-align: right;
+            }
+
+            #top {
+                width:100%;
+                position:absolute;
+            }
+            #footer {
+                width: 100%;
+                position: absolute;
+                bottom: 10px;
+            }
+    body
+        #top
+
+        #footer
+
+        include templates.html
