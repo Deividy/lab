@@ -1,7 +1,7 @@
 $(function() {
     var btnBack, btnNext;
 
-    btnBack = new Button('Back', 'sa-btnBack');
+    btnBack = new E.Button('Back', 'sa-btnBack');
     btnBack.setClass('btn-info')
         .setIcon('left', 'icon-arrow-left')
         .onClick(function() {
@@ -9,7 +9,7 @@ $(function() {
         }
     );
     
-    btnNext = new Button('Next', 'sa-btnNext');
+    btnNext = new E.Button('Next', 'sa-btnNext');
     btnNext.setClass('btn-success')
         .setIcon('right', 'icon-arrow-right')
         .onClick(function() {
@@ -17,20 +17,20 @@ $(function() {
         }
     );
 
-    var btnFetch = new Button('Fetch', 'sa-btnFetch');
+    var btnFetch = new E.Button('Fetch', 'sa-btnFetch');
     btnFetch.setIcon('left', 'icon-calendar').onClick(function() {
         alert('Fetch');
     });
 
-    var btnHtml = new ButtonAdapterHtml("weirdLink", "<a href='#'>Testing it</a>");
+    var btnHtml = new E.Html("weirdLink", "<a href='#'>Testing it</a>");
     
-    var tbTop = new Toolbar('tbTop');
-    tbTop.addButton('left', btnFetch);
-    tbTop.addButton('right', btnHtml);
+    var tbTop = new E.Toolbar('tbTop');
+    tbTop.addElement('left', btnFetch);
+    tbTop.addElement('right', btnHtml);
     tbTop.render('#top');
 
-    var tbFooter = new Toolbar('tbFooter');
-    tbFooter.addButton('left', btnBack);
-    tbFooter.addButton('right', btnNext);
+    var tbFooter = new E.Toolbar('tbFooter');
+    tbFooter.addElement('left', btnBack);
+    tbFooter.addElement('right', btnNext);
     tbFooter.render('#footer');
 });
