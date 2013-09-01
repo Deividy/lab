@@ -4,7 +4,8 @@
         _.extend(target.prototype, superclass.prototype);
         target.prototype.constructor = target;
     };
-    var abstractMethod = function () { throw new Error("Abstract method"); };
+    var abstractFn = function () { throw new Error("Abstract"); };
+    var emptyFn = function() { };
 
     // Elements
     var Element = (function() {
@@ -12,8 +13,10 @@
             if (!id) throw new Error("argument cannot be null id");
 
             this.id = id;
+
+            this.onClickHandler = emptyFn;
         }
-        Element.prototype.compile = abstractMethod;
+        Element.prototype.compile = abstractFn;
 
         Element.prototype.render = function (el, method) {
             if (!el && !this.el) throw new Error("el is undefined");
@@ -42,11 +45,7 @@
 
         Element.prototype.setElement = function (el) {
             this.el = el;
-
-            if (this.onClickHandler) {
-                this.el.click(this.onClickHandler);
-            }
-
+            this.el.click(this.onClickHandler);
             return this;
         };
 
