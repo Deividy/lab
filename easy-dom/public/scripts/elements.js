@@ -43,8 +43,8 @@
         Element.prototype.setElement = function (el) {
             this.el = el;
 
-            if (this.handler) {
-                this.el.click(this.handler);
+            if (this.onClickHandler) {
+                this.el.click(this.onClickHandler);
             }
 
             return this;
@@ -67,7 +67,7 @@
         Element.prototype.onClick = function(onClick, scope) {
             scope = scope || this;
 
-            this.handler = function () {
+            this.onClickHandler = function () {
                 onClick.apply(scope, arguments);
             };
         };
