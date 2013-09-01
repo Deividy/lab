@@ -114,12 +114,16 @@
     }());
 
     var Html = (function() {
-        function Html(id, html) {
+        // wrap is a flag to wrap the html content in a div with the id
+        // default to false
+        function Html(id, html, wrap) {
             Element.call(this, id);
             if (!html) throw new Error("argument cannot be null html");
 
             this.id = id;
-            this.html = "<div id='" + id + "'>" + html + "</div>";
+            if (wrap) {
+                this.html = "<div id='" + id + "'>" + html + "</div>";
+            }
         }
 
         inherit(Html, Element);
