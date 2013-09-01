@@ -23,9 +23,16 @@ $(function() {
     });
 
     var htmlLink = new E.Html("htmlLink", "<div id='htmlLink'><a href='#'>Testing it</a></div>");
+    var btnHistory = new E.Button('sa-btnHistory', 'History');
+    btnHistory.setIcon('left', 'icon-book')
+        .onClick(function() {
+            alert("History");
+        }
+    );
     
     var tbTop = new E.Toolbar('tbTop');
     tbTop.addElement('left', btnFetch);
+    tbTop.addElement('left', btnHistory);
     tbTop.addElement('right', htmlLink);
     tbTop.render('#top');
 

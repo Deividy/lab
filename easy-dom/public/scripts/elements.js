@@ -175,13 +175,13 @@
         };
 
         Toolbar.prototype.find = function (id) {
-            var elements, position;
+            var elements, position, i;
             // loop in all positions
             for (position in this.elements) {
                 elements = this.elements[position];
                 
                 // loop in each element of each position
-                for (var i = 0; i < elements.length; i++) {
+                for (i = 0; i < elements.length; i++) {
                     // if id match, return it
                     if (elements[i].id === id) {
                         return elements[i];
