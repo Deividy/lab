@@ -27,10 +27,10 @@ $(function() {
     var tbTop = new E.Toolbar('tbTop');
     tbTop.addElement('left', btnFetch);
     tbTop.addElement('right', btnHtml);
-    tbTop.renderTo('#top');
+    tbTop.render('#top');
 
     var tbFooter = new E.Toolbar('tbFooter');
     tbFooter.addElement('left', btnBack);
     tbFooter.addElement('right', btnNext);
-    tbFooter.renderTo('#footer');
+    tbFooter.render('#footer');
 });

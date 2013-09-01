@@ -15,15 +15,18 @@
         }
         Element.prototype.compile = abstractMethod;
 
-        Element.prototype.renderTo = function (el, method) {
+        Element.prototype.render = function (el, method) {
+            if (!el && !this.el) throw new Error("el is not defined");
+            if (!el) el = this.el;
+
             var $el = $(el);
             $el[method || 'html'](this.compile());
 
             return this.afterRender($el);
         };
 
-        Element.prototype.appendTo = function (el) {
-            return this.renderTo(el, 'append');
+        Element.prototype.append = function (el) {
+            return this.render(el, 'append');
         };
 
         Element.prototype.afterRender = function (container) {
@@ -163,7 +166,7 @@
             var elements = this.elements[position];
 
             for (var i = 0; i < elements.length; i++) {
-                elements[i].appendTo(el);
+                elements[i].append(el);
             }
             return true;
         };
