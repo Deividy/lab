@@ -22,11 +22,11 @@ $(function() {
         alert('Fetch');
     });
 
-    var btnHtml = new E.Html("weirdLink", "<a href='#'>Testing it</a>");
+    var htmlLink = new E.Html("htmlLink", "<div id='htmlLink'><a href='#'>Testing it</a></div>");
     
     var tbTop = new E.Toolbar('tbTop');
     tbTop.addElement('left', btnFetch);
-    tbTop.addElement('right', btnHtml);
+    tbTop.addElement('right', htmlLink);
     tbTop.render('#top');
 
     var tbFooter = new E.Toolbar('tbFooter');

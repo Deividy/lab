@@ -82,7 +82,6 @@
             if (!label) throw new Error("argument cannot be null label");
 
             this.label = label;
-            this.id = id;
 
             this.icon = { position: null, className: null };
             this.tpl = _.template($("#tpl-button").html());
@@ -120,7 +119,8 @@
             Element.call(this, id);
             if (!html) throw new Error("argument cannot be null html");
 
-            this.id = id;
+            this.html = html;
+
             if (wrap) {
                 this.html = "<div id='" + id + "'>" + html + "</div>";
             }
@@ -139,7 +139,6 @@
         function Toolbar (id) {
             Element.call(this, id);
 
-            this.id = id;
             this.elements = { left: [ ], right: [ ] };
 
             this.tpl = _.template($("#tpl-toolbar").html());
