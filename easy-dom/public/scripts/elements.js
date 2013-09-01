@@ -1,8 +1,6 @@
 (function() {
     var inherit = function (target, superclass) {
-        var extend = Object.create || _.extend;
-
-        extend(target.prototype, superclass.prototype);
+        _.extend(target.prototype, superclass.prototype);
         target.prototype.constructor = target;
     };
 
