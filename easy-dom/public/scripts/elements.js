@@ -1,40 +1,82 @@
 (function() {
+    // Common functions
     var inherit = function (target, superclass) {
         _.extend(target.prototype, superclass.prototype);
         target.prototype.constructor = target;
     };
-
     var abstractMethod = function () { throw new Error("Abstract method"); };
 
+    // Elements
     var Element = (function() {
         function Element(id) {
-            this.id;
+            if (!id) throw new Error("argument cannot be null id");
+
+            this.id = id;
         }
-        Element.prototype.render = abstractMethod;
+        Element.prototype.compile = abstractMethod;
+
+        Element.prototype.renderTo = function (el, method) {
+            var $el = $(el);
+            $el[method || 'html'](this.compile());
+
+            return this.afterRender($el);
+        };
+
+        Element.prototype.appendTo = function (el) {
+            return this.renderTo(el, 'append');
+        };
+
+        Element.prototype.afterRender = function (container) {
+            this.setContainer(container);
+            this.setElement($("#" + this.id));
+            return this;
+        };
+
+        Element.prototype.setContainer = function (container) {
+            this.container = container;
+            return this;
+        };
+
+        Element.prototype.setElement = function (el) {
+            this.el = el;
+
+            if (this.handler) {
+                this.el.click(this.handler);
+            }
+
+            return this;
+        };
 
         Element.prototype.disable = function () {
-            if (!this.el) {
-                throw new Error("Element is undefined");
-            }
+            if (!this.el) throw new Error("Element is undefined");
 
             this.el.hide();
             return this;
         };
+
         Element.prototype.enable = function () {
-            if (!this.el) {
-                throw new Error("Element is undefined");
-            }
+            if (!this.el) throw new Error("Element is undefined");
 
             this.el.show();
             return this;
+        };
+
+        Element.prototype.onClick = function(onClick, scope) {
+            scope = scope || this;
+
+            this.handler = function () {
+                onClick.apply(scope, arguments);
+            };
         };
 
         return Element;
     }());
 
     var Button = (function() {
-        function Button(label, id) {
-            if (!label || !id) throw new Error("argument cannot be null label || id");
+        function Button(id, label) {
+            Element.call(this, id);
+
+            if (!label) throw new Error("argument cannot be null label");
 
             this.label = label;
             this.id = id;
@@ -56,53 +98,31 @@
             return this;
         };
 
-        Button.prototype.onClick = function(onClick, scope) {
-            scope = scope || this;
-
-            this.handler = function () {
-                onClick.apply(scope, arguments);
-            };
-        };
-
-        Button.prototype.render = function (el, method) {
-            var $el = $(el);
-
-            $el[method || 'html'](this.tpl({
+        Button.prototype.compile = function () {
+            return this.tpl({
                 id: this.id,
                 label: this.label,
                 className: this.className,
                 icon: this.icon
-            }));
-            
-            this.container = $el;
-            this.el = $el.find("#" + this.id);
-
-            if (this.handler) {
-                this.el.click(this.handler);
-            }
-            return this;
+            });
         };
-
-
 
         return Button;
     }());
 
     var Html = (function() {
         function Html(id, html) {
+            Element.call(this, id);
+            if (!html) throw new Error("argument cannot be null html");
+
             this.id = id;
             this.html = "<div id='" + id + "'>" + html + "</div>";
         }
 
         inherit(Html, Element);
 
-        Html.prototype.render = function (el, method) {
-            var $el = $(el);
-            
-            $el[method || 'html'](this.html);
-
-            this.container = $el;
-            this.el = $("#" + this.id);
+        Html.prototype.compile = function () {
+            return this.html;
         };
 
         return Html;
@@ -110,7 +130,7 @@
 
     var Toolbar = (function() {
         function Toolbar (id) {
-            if (!id) throw new Error("id cannot be null");
+            Element.call(this, id);
 
             this.id = id;
             this.elements = { left: [ ], right: [ ] };
@@ -127,20 +147,23 @@
             this.elements[position].push(element);
         }
 
-        Toolbar.prototype.render = function (el, method) {
-            var html = this.tpl({ id: this.id, classLeft: this.classLeft, classRight: this.classRight });
-
-            $(el)[method || 'html'](html);
-
-            this.renderIn('left', $(el).find("." + this.classLeft));
-            this.renderIn('right', $(el).find("." + this.classRight));
+        Toolbar.prototype.compile = function (el, method) {
+            return this.tpl({ id: this.id, classLeft: this.classLeft, classRight: this.classRight });
         };
 
-        Toolbar.prototype.renderIn = function (position, el) {
+        Toolbar.prototype.afterRender = function() {
+            Element.prototype.afterRender.apply(this, arguments);
+
+            // MAY: rename, dont sounds like a clear name
+            this.renderElements('left', $(this.el).find("." + this.classLeft));
+            this.renderElements('right', $(this.el).find("." + this.classRight));
+        };
+
+        Toolbar.prototype.renderElements = function (position, el) {
             var elements = this.elements[position];
 
             for (var i = 0; i < elements.length; i++) {
-                elements[i].render(el, 'append');
+                elements[i].appendTo(el);
             }
             return true;
         };
@@ -148,14 +171,14 @@
         Toolbar.prototype.getButtonById = function (id) {
             var btn;
             for (var position in this.elements) {
-                btn = this.getButtonByIdIn(position, id);
+                btn = this.getButtonByPositionAndId(position, id);
                 
                 if (btn) return btn;
             }
             return false;
         };
 
-        Toolbar.prototype.getButtonByIdIn = function(position, id) {
+        Toolbar.prototype.getButtonByPositionAndId = function(position, id) {
             for (var i = 0; i < this.elements[position].length; i++) {
                 if (this.elements[position][i].id === id) {
                     return this.elements[position][i];
@@ -172,6 +195,5 @@
         Html: Html,
         Toolbar: Toolbar
     };
-
 
 }());

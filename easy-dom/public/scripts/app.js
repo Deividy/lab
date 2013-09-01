@@ -1,7 +1,7 @@
 $(function() {
     var btnBack, btnNext;
 
-    btnBack = new E.Button('Back', 'sa-btnBack');
+    btnBack = new E.Button('sa-btnBack', 'Back');
     btnBack.setClass('btn-info')
         .setIcon('left', 'icon-arrow-left')
         .onClick(function() {
@@ -9,7 +9,7 @@ $(function() {
         }
     );
     
-    btnNext = new E.Button('Next', 'sa-btnNext');
+    btnNext = new E.Button('sa-btnNext', 'Next');
     btnNext.setClass('btn-success')
         .setIcon('right', 'icon-arrow-right')
         .onClick(function() {
@@ -17,7 +17,7 @@ $(function() {
         }
     );
 
-    var btnFetch = new E.Button('Fetch', 'sa-btnFetch');
+    var btnFetch = new E.Button('sa-btnFetch', 'Fetch');
     btnFetch.setIcon('left', 'icon-calendar').onClick(function() {
         alert('Fetch');
     });
@@ -27,10 +27,10 @@ $(function() {
     var tbTop = new E.Toolbar('tbTop');
     tbTop.addElement('left', btnFetch);
     tbTop.addElement('right', btnHtml);
-    tbTop.render('#top');
+    tbTop.renderTo('#top');
 
     var tbFooter = new E.Toolbar('tbFooter');
     tbFooter.addElement('left', btnBack);
     tbFooter.addElement('right', btnNext);
-    tbFooter.render('#footer');
+    tbFooter.renderTo('#footer');
 });
