@@ -16,7 +16,7 @@
         Element.prototype.compile = abstractMethod;
 
         Element.prototype.render = function (el, method) {
-            if (!el && !this.el) throw new Error("el is not defined");
+            if (!el && !this.el) throw new Error("el is undefined");
             if (!el) el = this.el;
 
             var $el = $(el);
@@ -51,14 +51,14 @@
         };
 
         Element.prototype.disable = function () {
-            if (!this.el) throw new Error("Element is undefined");
+            if (!this.el) throw new Error("el is undefined");
 
             this.el.hide();
             return this;
         };
 
         Element.prototype.enable = function () {
-            if (!this.el) throw new Error("Element is undefined");
+            if (!this.el) throw new Error("el is undefined");
 
             this.el.show();
             return this;
@@ -114,7 +114,7 @@
     }());
 
     var Html = (function() {
-        // wrap is a flag to wrap the html content in a div with the id
+        // wrap is a flag to wrap the html content into a div with the id
         // default to false
         function Html(id, html, wrap) {
             Element.call(this, id);
