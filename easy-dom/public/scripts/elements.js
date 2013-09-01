@@ -175,22 +175,21 @@
             return true;
         };
 
-        Toolbar.prototype.getButtonById = function (id) {
-            var btn;
-            for (var position in this.elements) {
-                btn = this.getButtonByPositionAndId(position, id);
+        Toolbar.prototype.find = function (id) {
+            var elements, position;
+            // loop in all positions
+            for (position in this.elements) {
+                elements = this.elements[position];
                 
-                if (btn) return btn;
-            }
-            return false;
-        };
-
-        Toolbar.prototype.getButtonByPositionAndId = function(position, id) {
-            for (var i = 0; i < this.elements[position].length; i++) {
-                if (this.elements[position][i].id === id) {
-                    return this.elements[position][i];
+                // loop in each element of each position
+                for (var i = 0; i < elements.length; i++) {
+                    // if id match, return it
+                    if (elements[i].id === id) {
+                        return elements[i];
+                    }
                 }
             }
+            // dont found any element that match id in all elements of this.elements
             return false;
         };
 

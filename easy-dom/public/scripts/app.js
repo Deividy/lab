@@ -33,4 +33,8 @@ $(function() {
     tbFooter.addElement('left', btnBack);
     tbFooter.addElement('right', btnNext);
     tbFooter.render('#footer');
+
+    // to debug in firebug :)
+    window.tbTop = tbTop;
+    window.tbFooter = tbFooter;
 });
