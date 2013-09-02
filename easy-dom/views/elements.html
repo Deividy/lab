@@ -1,11 +1,11 @@
 <script type='text/template' id='tpl-button'>
     <button type='button' <%= id ? "id='" + id + "'" : '' %> class='btn <%= className %>'>
         <% if (icon.position === 'left') { %>
-            <i class='<%= icon.className %>'></i>
+            <i class='<%= icon.className %>'></i>&nbsp;
         <% } %>
         <%= label %>
         <% if (icon.position === 'right') { %>
-            <i class='<%= icon.className %>'></i>
+            &nbsp;<i class='<%= icon.className %>'></i>
         <% } %>
     </button>
 </script>

@@ -1,7 +1,5 @@
 $(function() {
-    var btnBack, btnNext;
-
-    btnBack = new E.Button('sa-btnBack', 'Back');
+    var btnBack = new E.Button('sa-btnBack', 'Back');
     btnBack.setClass('btn-info')
         .setIcon('left', 'icon-arrow-left')
         .onClick(function() {
@@ -9,7 +7,7 @@ $(function() {
         }
     );
     
-    btnNext = new E.Button('sa-btnNext', 'Next');
+    var btnNext = new E.Button('sa-btnNext', 'Next');
     btnNext.setClass('btn-success')
         .setIcon('right', 'icon-arrow-right')
         .onClick(function() {
