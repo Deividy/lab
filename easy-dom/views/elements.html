@@ -9,9 +9,41 @@
         <% } %>
     </button>
 </script>
+
 <script type='text/template' id='tpl-toolbar'>
-    <div class='toolbar' id='<%= id %>'>
+    <div class='toolbar navbar navbar-inner <%= className %>' id='<%= id %>'>
         <div class='<%= classLeft %>'></div>
         <div class='<%= classRight %>'></div>
     </div>
+</script>
+
+<script type='text/template' id='tpl-dropdown'>
+    <div class='btn-group <%= type %>'>
+        <button type='button' <%= id ? "id='" + id + "'" : '' %> 
+            class='btn dropdown-toggle <%= className %>' data-toggle='dropdown'>
+                <% if (icon.position === 'left') { %>
+                    <i class='<%= icon.className %>'></i>&nbsp;
+                <% } %>
+                <%= label %>
+                <% if (icon.position === 'right') { %>
+                    &nbsp;<i class='<%= icon.className %>'></i>
+                <% } %>
+                &nbsp; <span class='caret'></span>
+        </button>
+        <ul class='dropdown-menu'></ul>
+    </div>
+</script>
+
+<script type='text/template' id='tpl-dropOption'>
+    <li <%= id ? "id='" + id + "'" : '' %> class='<%= className %>'>
+        <a href='#'>
+            <% if (icon.position === 'left') { %>
+                <i class='<%= icon.className %>'></i>&nbsp;
+            <% } %>
+            <%= label %>
+            <% if (icon.position === 'right') { %>
+                &nbsp;<i class='<%= icon.className %>'></i>
+            <% } %>
+        </a>
+    </li>
 </script>

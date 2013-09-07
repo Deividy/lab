@@ -1,45 +1,73 @@
 $(function() {
-    var btnBack = new E.Button('sa-btnBack', 'Back');
-    btnBack.setClass('btn-info')
-        .setIcon('left', 'icon-arrow-left')
-        .onClick(function() {
-            alert('Back');
-        }
-    );
-    
-    var btnNext = new E.Button('sa-btnNext', 'Next');
-    btnNext.setClass('btn-success')
-        .setIcon('right', 'icon-arrow-right')
-        .onClick(function() {
-            alert('Next');
-        }
-    );
+    var tbTop, bFetch, bHistory, bWip, bPrint,
+        bTires, bCreateRo, bDone, bUser,
+        tbBottom, bBack, bNext, bPark, bNew, bNavBar;
 
-    var btnFetch = new E.Button('sa-btnFetch', 'Fetch');
-    btnFetch.setIcon('left', 'icon-calendar').onClick(function() {
-        alert('Fetch');
+
+    // btn print (dealSummary)
+    bPrint = E.buttonDropdown('btnDealSummary', 'View/Print');
+    bPrint.setIcon('left', 'icon-print');
+    
+    bPrint.add('btnPrintCheckout', 'Checkout', 'icon-print', function () {
+        alert('Checkout');
+    });
+    
+    bPrint.add('btnProductGrid', 'Details', 'icon-th-list', function () {
+        alert('Detail');
     });
 
-    var htmlLink = new E.Html("htmlLink", "<div id='htmlLink'><a href='#'>Testing it</a></div>");
-    var btnHistory = new E.Button('sa-btnHistory', 'History');
-    btnHistory.setIcon('left', 'icon-book')
-        .onClick(function() {
-            alert("History");
-        }
-    );
+    bPrint.add('btnPrint', 'Summary', 'icon-file-text', function() {
+        alert("Summary");
+    });
     
-    var tbTop = new E.Toolbar('tbTop');
-    tbTop.addElement('left', btnFetch);
-    tbTop.addElement('left', btnHistory);
-    tbTop.addElement('right', htmlLink);
-    tbTop.render('#top');
+    // btnDone
+    bDone = E.button('btnDone', 'Done');
+    bDone.setClass('btn-success').setIcon('left', 'icon-thumbs-up').onClick(function () {
+        alert('Done');
+    });
+    
+    // btn logged in user
+    bUser = E.button('loggedInUser', 'user');
+    bUser.setIcon('left', 'icon-user').onClick(function() {
+        alert('User');
+    });
 
-    var tbFooter = new E.Toolbar('tbFooter');
-    tbFooter.addElement('left', btnBack);
-    tbFooter.addElement('right', btnNext);
-    tbFooter.render('#footer');
+    // btn back
+    bBack = E.button('btnBack', 'Back');
+    bBack.setIcon('left', 'icon-arrow-left').setClass('btn-info').onClick(function() {
+        alert('Back');
+    });
+    
+    // btn next
+    bNext = E.button('btnNext', 'Next');
+    bNext.setIcon('right', 'icon-arrow-right').setClass('btn-success').onClick(function() {
+        alert('Next');
+    });
+    
+    // btn navBar
+    bNavBar = E.buttonDropdown('btnNavBar', 'Test');
+    bNavBar.setType('dropdown');
+    bNavBar.add("Test", "test", "icon-edit");
+    bNavBar.add("write", "Write up", "icon-edit");
 
-    // to debug in firebug :)
-    window.tbTop = tbTop;
-    window.tbFooter = tbFooter;
+    tbBottom = E.toolbar('tbFooter');
+    tbBottom.setClass('navbar-fixed-bottom');
+    tbBottom.addElement('left', bUser);
+    tbBottom.addElement('right', E.button("Testis", "Testis"));
+
+    tbBottom.renderTo('#footer')
+
+    tbTop = E.toolbar('tbTop');
+    tbTop.setClass('navbar-fixed-top');
+    
+    tbTop.addElement('left', bBack);
+    tbTop.addElement('left', bNavBar);
+    
+    tbTop.addElement('right', bPrint);
+    
+    tbTop.addElement('right', bDone);
+    tbTop.addElement('right', bNext);
+    
+    tbTop.renderTo('#top');
+
 });
