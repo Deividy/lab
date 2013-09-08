@@ -8,10 +8,9 @@
 // A nice thing would be if the NavBar, Dropdown (maybe an ClassElement/ClickableElement)
 // be a decorator and we just decorate the element, think more about this, it can be awesome.
 (function () {
-    // decorators and factories
-    var decorators = [];
+    // global decorators and factories
     var decorate = function (obj) {
-        _.each(decorators, function (decorator) {
+        _.each(E.decorators, function (decorator) {
             decorator(obj);
         });
 
@@ -24,21 +23,30 @@
         button: function (id, label) {
             return decorate(new Button(id, label));
         },
-        buttonDropdown: function (id, label) {
-            return decorate(new ButtonDropdown(id, label));
+        btnDropdown: function (id, label) {
+            return decorate(new BtnDropdown(id, label));
         },
-        buttonOption: function (id, label) {
-            return decorate(new ButtonOption(id, label));
+        btnOption: function (id, label) {
+            return decorate(new BtnOption(id, label));
         },
         toolbar: function (id) {
             return decorate(new Toolbar(id));
         },
-        decorators: decorators
+        decorators: [ ]
     };
 
     window.E = E;
 
     // Common functions
+    var demandNotNil = function (a, argName) {
+        if (a) {
+            return true;
+        }
+        throw new Error("Argument cannot be null " + argName);
+    };
+
+    var abstractFn = function () { throw new Error("Abstract"); };
+
     var inherit = function (child, superclass) {
         function c() {
             this.constructor = child.constructor;
@@ -56,17 +64,21 @@
         return child;
     };
 
-    var abstractFn = function () { throw new Error("Abstract"); };
-
     // Decorators
     var D = {
         click: function (Obj) {
+            var _afterRender = Obj.prototype.afterRender;
+
+            Obj.prototype.getClickHandlers = function () {
+                return this.clickHandlers ? this.clickHandlers : this.clickHandlers = [ ];
+            };
+
             Obj.prototype.afterRender = function () {
-                Element.prototype.afterRender.apply(this, arguments);
+                _afterRender.apply(this, arguments);
 
                 var el = this.el;
 
-                _.each(this.clickHandlers || [ ], function (click) {
+                _.each(this.getClickHandlers(), function (click) {
                     el.click(click);
                 });
 
@@ -77,11 +89,7 @@
                 var me = this;
                 scope = scope || this;
 
-                if (!this.clickHandlers) {
-                    this.clickHandlers = [ ];
-                }
-
-                this.clickHandlers.push(function (ev) {
+                this.getClickHandlers().push(function (ev) {
                     ev.preventDefault();
                     if (me.isDisabled) {
                         return;
@@ -91,11 +99,10 @@
 
                 return this;
             };
+
         },
 
         enable: function (Obj) {
-            Obj.prototype.isDisabled = false;
-
             Obj.prototype.disable = function () {
                 this.demandEl();
                 this.el.addClass("disabled");
@@ -112,24 +119,28 @@
         },
 
         cls: function (Obj) {
-            Obj.prototype.className = '';
-
-            Obj.prototype.setClass = function (className) {
+            Obj.prototype.setElClass = function (elClass) {
                 if (this.el) {
-                    this.el.removeClass(this.className);
-                    this.el.addClass(className);
+                    this.el.removeClass(this.getElClass());
+                    this.el.addClass(elClass);
                 }
-                this.className = className;
+                this.elClass = elClass;
                 return this;
+            };
+
+            Obj.prototype.getElClass = function() {
+                return this.elClass ? this.elClass : this.elClass = '';
             };
         },
 
         icon: function (Obj) {
-            Obj.prototype.icon = { position: null, className: null };
-
-            Obj.prototype.setIcon = function (position, className) {
-                this.icon = { position: position, className: className };
+            Obj.prototype.setIcon = function (position, elClass) {
+                this.icon = { position: position, elClass: elClass };
                 return this;
+            };
+
+            Obj.prototype.getIcon = function() {
+                return this.icon ? this.icon : this.icon = { position: null, elClass: null };
             };
         },
 
@@ -138,15 +149,15 @@
                 Obj.prototype.getOptionsEl = abstractFn;
             }
 
-            Obj.prototype.add = function (id, label, icon, handler, scope) {
-                var dropOpt = decorate(new ButtonOption(id, label));
+            Obj.prototype.getOptions = function () {
+                return this.options ? this.options : this.options = [ ];
+            };
+            Obj.prototype.getOptionsById = function () {
+                return this.optionsById ? this.optionsById : this.optionsById =  { };
+            }
 
-                if (!this.options) {
-                    this.options = [ ];
-                }
-                if (!this.optionsById) {
-                    this.optionsById = { };
-                }
+            Obj.prototype.add = function (id, label, icon, handler, scope) {
+                var dropOpt = decorate(new BtnOption(id, label));
 
                 if (icon) {
                     dropOpt.setIcon('left', icon);
@@ -155,7 +166,9 @@
                     dropOpt.onClick(handler, scope);
                 }
 
-                this.options.push(dropOpt);
+                this.getOptions().push(dropOpt);
+                this.getOptionsById()[id] = dropOpt;
+
                 return dropOpt;
             };
 
@@ -182,20 +195,23 @@
     // Elements
     var Element = (function () {
         function Element(id) {
-            if (!id) throw new Error("argument cannot be null id");
+            demandNotNil(id, 'id');
             this.id = id;
         }
 
         Element.prototype.compile = abstractFn;
 
         Element.prototype.demandEl = function () {
-            if (!this.el) throw new Error("el is undefined");
+            demandNotNil(el, 'el');
             return true;
         };
 
         Element.prototype.renderTo = function (container, method) {
-            if (!container && !this.container) throw new Error("container is undefined");
-            if (!container) container = this.container;
+            demandNotNil(container || this.container, 'container');
+
+            if (!container) {
+                container = this.container;
+            }
 
             var $container = $(container);
             $container[method || 'html'](this.compile());
@@ -237,7 +253,7 @@
         // default to false
         function Html(id, html, canWrap) {
             Element.call(this, id);
-            if (!html) throw new Error("argument cannot be null html");
+            demandNotNill(html, 'html');
 
             this.html = html;
 
@@ -260,8 +276,7 @@
     var Button = (function () {
         function Button(id, label) {
             Element.call(this, id);
-
-            if (!label) throw new Error("argument cannot be null label");
+            demandNotNil(label, 'label');
 
             this.label = label;
             this.tpl = _.template($("#tpl-button").html());
@@ -277,54 +292,49 @@
         Button.prototype.compile = function () {
             return this.tpl({
                 id: this.id, label: this.label,
-                className: this.className, icon: this.icon
+                elClass: this.getElClass(), icon: this.getIcon()
             });
         };
 
         return Button;
     } ());
 
-    var ButtonOption = (function () {
-        function ButtonOption() {
+    var BtnOption = (function () {
+        function BtnOption() {
             Button.apply(this, arguments);
-            this.tpl = _.template($('#tpl-dropOption').html());
+            this.tpl = _.template($('#tpl-btnOption').html());
         }
 
-        inherit(ButtonOption, Button);
+        inherit(BtnOption, Button);
 
-        return ButtonOption;
+        return BtnOption;
     } ());
 
-    var ButtonDropdown = (function () {
-        function ButtonDropdown() {
+    var BtnDropdown = (function () {
+        function BtnDropdown() {
             Button.apply(this, arguments);
 
-            this.tpl = _.template($("#tpl-dropdown").html());
+            this.tpl = _.template($("#tpl-btnDropdown").html());
             this.type = 'dropdown';
             this.split = false;
         }
 
-        inherit(ButtonDropdown, Button);
+        inherit(BtnDropdown, Button);
 
-        D.options(ButtonDropdown);
+        D.options(BtnDropdown);
 
-        ButtonDropdown.prototype.getOptionsEl = function() {
+        BtnDropdown.prototype.getOptionsEl = function() {
             return this.el.parent('div.btn-group').children('ul.dropdown-menu'); 
         };
 
-        ButtonDropdown.prototype.setType = function (type) {
-            this.type = type;
-            return this;
-        };
-
-        ButtonDropdown.prototype.compile = function () {
+        BtnDropdown.prototype.compile = function () {
             return this.tpl({
-                id: this.id, label: this.label, className: this.className,
-                type: this.type, icon: this.icon, split: this.split
+                id: this.id, label: this.label, elClass: this.getElClass(),
+                type: this.type, icon: this.getIcon(), split: this.split
             });
         };
 
-        return ButtonDropdown;
+        return BtnDropdown;
     } ());
 
     var Toolbar = (function () {
@@ -350,7 +360,7 @@
         Toolbar.prototype.compile = function (el, method) {
             return this.tpl({
                 id: this.id, classLeft: this.classLeft,
-                classRight: this.classRight, className: this.className
+                classRight: this.classRight, elClass: this.getElClass()
             });
         };
 

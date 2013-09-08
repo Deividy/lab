@@ -1,32 +1,32 @@
 <script type='text/template' id='tpl-button'>
-    <button type='button' <%= id ? "id='" + id + "'" : '' %> class='btn <%= className %>'>
+    <button type='button' <%= id ? "id='" + id + "'" : '' %> class='btn <%= elClass %>'>
         <% if (icon.position === 'left') { %>
-            <i class='<%= icon.className %>'></i>&nbsp;
+            <i class='<%= icon.elClass %>'></i>&nbsp;
         <% } %>
         <%= label %>
         <% if (icon.position === 'right') { %>
-            &nbsp;<i class='<%= icon.className %>'></i>
+            &nbsp;<i class='<%= icon.elClass %>'></i>
         <% } %>
     </button>
 </script>
 
 <script type='text/template' id='tpl-toolbar'>
-    <div class='toolbar navbar navbar-inner <%= className %>' id='<%= id %>'>
+    <div class='toolbar navbar navbar-inner <%= elClass %>' id='<%= id %>'>
         <div class='<%= classLeft %>'></div>
         <div class='<%= classRight %>'></div>
     </div>
 </script>
 
-<script type='text/template' id='tpl-dropdown'>
+<script type='text/template' id='tpl-btnDropdown'>
     <div class='btn-group <%= type %>'>
         <button type='button' <%= id ? "id='" + id + "'" : '' %> 
-            class='btn dropdown-toggle <%= className %>' data-toggle='dropdown'>
+            class='btn dropdown-toggle <%= elClass %>' data-toggle='dropdown'>
                 <% if (icon.position === 'left') { %>
-                    <i class='<%= icon.className %>'></i>&nbsp;
+                    <i class='<%= icon.elClass %>'></i>&nbsp;
                 <% } %>
                 <%= label %>
                 <% if (icon.position === 'right') { %>
-                    &nbsp;<i class='<%= icon.className %>'></i>
+                    &nbsp;<i class='<%= icon.elClass %>'></i>
                 <% } %>
                 &nbsp; <span class='caret'></span>
         </button>
@@ -34,15 +34,15 @@
     </div>
 </script>
 
-<script type='text/template' id='tpl-dropOption'>
-    <li <%= id ? "id='" + id + "'" : '' %> class='<%= className %>'>
+<script type='text/template' id='tpl-btnOption'>
+    <li <%= id ? "id='" + id + "'" : '' %> class='<%= elClass %>'>
         <a href='#'>
             <% if (icon.position === 'left') { %>
-                <i class='<%= icon.className %>'></i>&nbsp;
+                <i class='<%= icon.elClass %>'></i>&nbsp;
             <% } %>
             <%= label %>
             <% if (icon.position === 'right') { %>
-                &nbsp;<i class='<%= icon.className %>'></i>
+                &nbsp;<i class='<%= icon.elClass %>'></i>
             <% } %>
         </a>
     </li>
