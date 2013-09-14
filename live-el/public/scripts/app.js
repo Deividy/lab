@@ -6,7 +6,7 @@ $(function() {
 
     // btn print (dealSummary)
     bPrint = E.btnDropdown('btnDealSummary', 'View/Print');
-    bPrint.setIcon('left', 'icon-print');
+    bPrint.icon('left', 'icon-print');
     
     bPrint.add('btnPrintCheckout', 'Checkout', 'icon-print', function () {
         alert('Checkout');
@@ -22,25 +22,25 @@ $(function() {
     
     // btnDone
     bDone = E.button('btnDone', 'Done');
-    bDone.setElClass('btn-success').setIcon('left', 'icon-thumbs-up').onClick(function () {
+    bDone.elClass('btn-success').icon('left', 'icon-thumbs-up').onClick(function () {
         alert('Done');
     });
     
     // btn logged in user
     bUser = E.button('loggedInUser', 'user');
-    bUser.setIcon('left', 'icon-user').onClick(function() {
+    bUser.icon('left', 'icon-user').onClick(function() {
         alert('User');
     });
 
     // btn back
     bBack = E.button('btnBack', 'Back');
-    bBack.setIcon('left', 'icon-arrow-left').setElClass('btn-info').onClick(function() {
+    bBack.icon('left', 'icon-arrow-left').elClass('btn-info').onClick(function() {
         alert('Back');
     });
     
     // btn next
     bNext = E.button('btnNext', 'Next');
-    bNext.setIcon('right', 'icon-arrow-right').setElClass('btn-success').onClick(function() {
+    bNext.icon('right', 'icon-arrow-right').elClass('btn-success').onClick(function() {
         alert('Next');
     });
     
@@ -51,14 +51,14 @@ $(function() {
     bNavBar.add("write", "Write up", "icon-edit");
 
     tbBottom = E.toolbar('tbFooter');
-    tbBottom.setElClass('navbar-fixed-bottom');
+    tbBottom.elClass('navbar-fixed-bottom');
     tbBottom.addElement('left', bUser);
     tbBottom.addElement('right', E.button("Testis", "Testis"));
 
     tbBottom.renderTo('#footer')
 
     tbTop = E.toolbar('tbTop');
-    tbTop.setElClass('navbar-fixed-top');
+    tbTop.elClass('navbar-fixed-top');
     
     tbTop.addElement('left', bBack);
     tbTop.addElement('left', bNavBar);
@@ -69,5 +69,18 @@ $(function() {
     tbTop.addElement('right', bNext);
     
     tbTop.renderTo('#top');
+});
 
+// new elements with ko, working in design
+$(function () {
+    var ViewModel = function(first, last) {
+        this.firstName = ko.observable(first);
+        this.lastName = ko.observable(last);
+    
+        this.fullName = ko.computed(function() {
+            return this.firstName() + " " + this.lastName();
+        }, this);
+    };
+    
+    ko.applyBindings(new ViewModel("Planet", "Earth"));
 });

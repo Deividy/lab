@@ -4,11 +4,8 @@
 // Toolbar needs refactor
 // factories needs some love
 
-// TODO: MAY:
-// A nice thing would be if the NavBar, Dropdown (maybe an ClassElement/ClickableElement)
-// be a decorator and we just decorate the element, think more about this, it can be awesome.
 (function () {
-    // global decorators and factories
+    // global decorators, factories and exports
     var decorate = function (obj) {
         _.each(E.decorators, function (decorator) {
             decorator(obj);
@@ -32,21 +29,13 @@
         toolbar: function (id) {
             return decorate(new Toolbar(id));
         },
-        decorators: [ ]
+        decorators: []
     };
 
     window.E = E;
 
     // Common functions
-    var demandNotNil = function (a, argName) {
-        if (a) {
-            return true;
-        }
-        throw new Error("Argument cannot be null " + argName);
-    };
-
     var abstractFn = function () { throw new Error("Abstract"); };
-
     var inherit = function (child, superclass) {
         function c() {
             this.constructor = child.constructor;
@@ -63,22 +52,28 @@
 
         return child;
     };
+    var demandNotNil = function (a, argName) {
+        if (a) {
+            return true;
+        }
+        throw new Error("Argument cannot be null " + argName);
+    };
 
-    // Decorators
+    // Class Decorators
     var D = {
         click: function (Obj) {
-            var _afterRender = Obj.prototype.afterRender;
+            var afterRender = Obj.prototype.afterRender;
 
-            Obj.prototype.getClickHandlers = function () {
-                return this.clickHandlers ? this.clickHandlers : this.clickHandlers = [ ];
+            Obj.prototype.clickHandlers = function () {
+                return this._clickHandlers ? this._clickHandlers : this._clickHandlers = [ ];
             };
 
             Obj.prototype.afterRender = function () {
-                _afterRender.apply(this, arguments);
+                afterRender.apply(this, arguments);
 
                 var el = this.el;
 
-                _.each(this.getClickHandlers(), function (click) {
+                _.each(this.clickHandlers(), function (click) {
                     el.click(click);
                 });
 
@@ -89,7 +84,7 @@
                 var me = this;
                 scope = scope || this;
 
-                this.getClickHandlers().push(function (ev) {
+                this.clickHandlers().push(function (ev) {
                     ev.preventDefault();
                     if (me.isDisabled) {
                         return;
@@ -119,55 +114,54 @@
         },
 
         cls: function (Obj) {
-            Obj.prototype.setElClass = function (elClass) {
-                if (this.el) {
-                    this.el.removeClass(this.getElClass());
-                    this.el.addClass(elClass);
+            Obj.prototype.elClass = function (elCls) {
+                if (!elCls) {
+                    return this._elClass ? this._elClass : this._elClass = '';
                 }
-                this.elClass = elClass;
-                return this;
-            };
+                
+                if (this.el) {
+                    this.el.removeClass(this.elClass());
+                    this.el.addClass(elCls);
+                }
 
-            Obj.prototype.getElClass = function() {
-                return this.elClass ? this.elClass : this.elClass = '';
+                this._elClass = elCls;
+                return this;
             };
         },
 
         icon: function (Obj) {
-            Obj.prototype.setIcon = function (position, elClass) {
-                this.icon = { position: position, elClass: elClass };
+            Obj.prototype.icon = function (position, elClass) {
+                if (!position && !elClass) {
+                    return this._icon ? this._icon : this._icon = { position: null, elClass: null };
+                }
+                this._icon = { position: position, elClass: elClass };
                 return this;
-            };
-
-            Obj.prototype.getIcon = function() {
-                return this.icon ? this.icon : this.icon = { position: null, elClass: null };
             };
         },
 
         options: function (Obj) {
-            if (!Obj.prototype.getOptionsEl) {
-                Obj.prototype.getOptionsEl = abstractFn;
-            }
+            Obj.prototype.optionsEl = abstractFn;
 
-            Obj.prototype.getOptions = function () {
-                return this.options ? this.options : this.options = [ ];
+            Obj.prototype.options = function () {
+                return this._options ? this._options : this._options = [];
             };
-            Obj.prototype.getOptionsById = function () {
-                return this.optionsById ? this.optionsById : this.optionsById =  { };
-            }
+            
+            Obj.prototype.optionsById = function() {
+                return this._optionsById ? this._optionsById : this._optionsById = { };
+            };
 
             Obj.prototype.add = function (id, label, icon, handler, scope) {
                 var dropOpt = decorate(new BtnOption(id, label));
 
                 if (icon) {
-                    dropOpt.setIcon('left', icon);
+                    dropOpt.icon('left', icon);
                 }
                 if (handler) {
                     dropOpt.onClick(handler, scope);
                 }
 
-                this.getOptions().push(dropOpt);
-                this.getOptionsById()[id] = dropOpt;
+                this.options().push(dropOpt);
+                this.optionsById()[id] = dropOpt;
 
                 return dropOpt;
             };
@@ -180,18 +174,18 @@
 
             Obj.prototype.renderOptions = function () {
                 var me = this,
-                    el = this.getOptionsEl(); 
+                    el = this.optionsEl();
 
                 el.html('');
 
-                _.each(this.options, function (opt) {
+                _.each(this.options(), function (opt) {
                     me.optionsById[opt.id] = opt;
                     opt.appendTo(el);
                 });
             };
         }
     };
-    
+
     // Elements
     var Element = (function () {
         function Element(id) {
@@ -202,7 +196,7 @@
         Element.prototype.compile = abstractFn;
 
         Element.prototype.demandEl = function () {
-            demandNotNil(el, 'el');
+            demandNotNil(this.el, 'el');
             return true;
         };
 
@@ -253,7 +247,7 @@
         // default to false
         function Html(id, html, canWrap) {
             Element.call(this, id);
-            demandNotNill(html, 'html');
+            demandNotNil(html, 'html');
 
             this.html = html;
 
@@ -265,7 +259,8 @@
         inherit(Html, Element);
 
         D.enable(Html);
-
+        D.click(Html);
+        
         Html.prototype.compile = function () {
             return this.html;
         };
@@ -292,7 +287,7 @@
         Button.prototype.compile = function () {
             return this.tpl({
                 id: this.id, label: this.label,
-                elClass: this.getElClass(), icon: this.getIcon()
+                elClass: this.elClass(), icon: this.icon()
             });
         };
 
@@ -323,14 +318,14 @@
 
         D.options(BtnDropdown);
 
-        BtnDropdown.prototype.getOptionsEl = function() {
-            return this.el.parent('div.btn-group').children('ul.dropdown-menu'); 
+        BtnDropdown.prototype.optionsEl = function () {
+            return this.el.parent('div.btn-group').children('ul.dropdown-menu');
         };
 
         BtnDropdown.prototype.compile = function () {
             return this.tpl({
-                id: this.id, label: this.label, elClass: this.getElClass(),
-                type: this.type, icon: this.getIcon(), split: this.split
+                id: this.id, label: this.label, elClass: this.elClass(),
+                type: this.type, icon: this.icon(), split: this.split
             });
         };
 
@@ -360,7 +355,7 @@
         Toolbar.prototype.compile = function (el, method) {
             return this.tpl({
                 id: this.id, classLeft: this.classLeft,
-                classRight: this.classRight, elClass: this.getElClass()
+                classRight: this.classRight, elClass: this.elClass()
             });
         };
 
@@ -396,7 +391,7 @@
             // dont found any element that match id in all elements of this.elements
             return false;
         };
-
+        
         return Toolbar;
     } ());
 } ());

@@ -19,16 +19,22 @@
 
 <script type='text/template' id='tpl-btnDropdown'>
     <div class='btn-group <%= type %>'>
-        <button type='button' <%= id ? "id='" + id + "'" : '' %> 
-            class='btn dropdown-toggle <%= elClass %>' data-toggle='dropdown'>
+        <button type='button' id='<%= id %>'
+            class='btn  <%= elClass %> <%= !split ? "dropdown-toggle' data-toggle='dropdown'" : "" %>' >
                 <% if (icon.position === 'left') { %>
                     <i class='<%= icon.elClass %>'></i>&nbsp;
                 <% } %>
+
                 <%= label %>
+
                 <% if (icon.position === 'right') { %>
                     &nbsp;<i class='<%= icon.elClass %>'></i>
                 <% } %>
-                &nbsp; <span class='caret'></span>
+
+                <% if (split) { %>
+                    </button><button data-toggle='dropdown' class='btn dropdown-toggle <%= elClass %>'>
+                <% } %>
+                &nbsp;<span class='caret'></span>&nbsp;
         </button>
         <ul class='dropdown-menu'></ul>
     </div>
@@ -37,13 +43,27 @@
 <script type='text/template' id='tpl-btnOption'>
     <li <%= id ? "id='" + id + "'" : '' %> class='<%= elClass %>'>
         <a href='#'>
-            <% if (icon.position === 'left') { %>
-                <i class='<%= icon.elClass %>'></i>&nbsp;
-            <% } %>
-            <%= label %>
-            <% if (icon.position === 'right') { %>
-                &nbsp;<i class='<%= icon.elClass %>'></i>
-            <% } %>
-        </a>
+        <% if (icon.position === 'left') { %>
+            <i class='<%= icon.elClass %>'></i>&nbsp;
+        <% } %>
+        <%= label %>
+        <% if (icon.position === 'right') { %>
+            &nbsp;<i class='<%= icon.elClass %>'></i>
+        <% } %>
+    </a>
     </li>
 </script>
+
+<!-- KO design -->
+<style>
+    .live {
+        margin-top: 55px;
+        padding: 10px;
+    }
+</style>
+<div class='live'>
+    <p>First name: <input data-bind="value: firstName" /></p>
+    <p>Last name: <input data-bind="value: lastName" /></p>
+    <h2>Hello, <span data-bind="text: fullName"> </span>!</h2>
+</div>
+
