@@ -57,13 +57,39 @@
 <!-- KO design -->
 <style>
     .live {
+        padding: 10px;
+    }
+    .totals {
         margin-top: 55px;
         padding: 10px;
     }
+    .strong {
+        font-weight: bold;
+    }
+    .col {
+        float: left;
+        padding: 5px;
+        border: 1px solid #f0f0f0;
+    }
+    .clearfix {
+        clear: both;
+    }
 </style>
+<div class='totals' data-bind='foreach: totals'>
+    <div class='col'>
+        <div class='strong' data-bind='text: label'></div>
+        <div data-bind='text: total'></div>
+    </div>
+</div>
+<div class='clearfix'></div>
 <div class='live'>
-    <p>First name: <input data-bind="value: firstName" /></p>
-    <p>Last name: <input data-bind="value: lastName" /></p>
-    <h2>Hello, <span data-bind="text: fullName"> </span>!</h2>
+    <a class='btn btn-success' data-bind='click: addLine'><i class='icon-plus'></i> Add</a>
+    <div data-bind="foreach: lines">
+        <span data-bind="text: $index"> </span>
+        <div class='col'>
+            <strong data-bind='text: label'></strong>
+            <span data-bind='text: val'></span>
+        </div>
+    </div>
 </div>
 

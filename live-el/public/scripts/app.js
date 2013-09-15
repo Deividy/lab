@@ -73,14 +73,37 @@ $(function() {
 
 // new elements with ko, working in design
 $(function () {
-    var ViewModel = function(first, last) {
-        this.firstName = ko.observable(first);
-        this.lastName = ko.observable(last);
+    var LiveModel = (function() {
+        function LiveModel() {
+            this.lines = ko.observableArray();    
+        }
+
+        LiveModel.prototype.addLine = function() {
+            this.lines.push({ label: new Date(), val: "" });
+        };
+
+        return LiveModel;
+    }());
     
-        this.fullName = ko.computed(function() {
-            return this.firstName() + " " + this.lastName();
-        }, this);
-    };
+    window.lm = new LiveModel();
+
+    ko.applyBindings(lm, $('.live').get(0));
+
+
+    var Totals = (function() {
+        function TotalsModel(totals) {
+            this.totals = totals;
+        }
+
+        return TotalsModel;
+    }());
     
-    ko.applyBindings(new ViewModel("Planet", "Earth"));
+    var totals = [
+        { label: 'Sub total', total: ko.observable(12.32) },
+        { label: 'Grand total', total: ko.observable(25.52) }
+    ];
+
+    window.totals = new Totals(totals);
+
+    ko.applyBindings(window.totals, $('.totals').get(0));
 });
