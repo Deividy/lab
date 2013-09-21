@@ -1,38 +1,43 @@
-﻿// TODO:
-// think more about the 'global' kind of decorator that we're using here
-// Elements is taking care of a lot of things that not all elements share
-// Toolbar needs refactor
-// factories needs some love
-
-(function () {
-    // global decorators, factories and exports
-    var decorate = function (obj) {
-        _.each(E.decorators, function (decorator) {
-            decorator(obj);
-        });
-
-        return obj;
-    };
-    var E = {
+﻿(function () {
+    // Exports;
+    var E = window.E = {
         html: function (id, html, wrap) {
-            return decorate(new Html(id, html, wrap));
+            return new Html(id, html, wrap);
         },
         button: function (id, label) {
-            return decorate(new Button(id, label));
+            return new Button(id, label);
         },
         btnDropdown: function (id, label) {
-            return decorate(new BtnDropdown(id, label));
+            return new BtnDropdown(id, label);
         },
         btnOption: function (id, label) {
-            return decorate(new BtnOption(id, label));
+            return new BtnOption(id, label);
         },
         toolbar: function (id) {
-            return decorate(new Toolbar(id));
+            return new Toolbar(id);
         },
-        decorators: []
-    };
 
-    window.E = E;
+        decorate: function(decorate) {
+            var DecoratedE = { };
+
+            for (var key in E) {
+                (function (key) {
+                    if (key == 'decorate') {
+                        return;
+                    }
+
+                    DecoratedE[key] = function() {
+                        var instance = decorate(E[key].apply(null, arguments));
+                        instance.decorate = decorate;
+
+                        return instance;
+                    };
+                }(key));
+            }
+
+            return DecoratedE;
+        }
+    };
 
     // Common functions
     var abstractFn = function () { throw new Error("Abstract"); };
@@ -52,138 +57,11 @@
 
         return child;
     };
-    var demandNotNil = function (a, argName) {
-        if (a) {
+    var demandNotNil = function (arg, argName) {
+        if (arg) {
             return true;
         }
         throw new Error("Argument cannot be null " + argName);
-    };
-
-    // Class Decorators
-    var D = {
-        click: function (Obj) {
-            var afterRender = Obj.prototype.afterRender;
-
-            Obj.prototype.clickHandlers = function () {
-                return this._clickHandlers ? this._clickHandlers : this._clickHandlers = [ ];
-            };
-
-            Obj.prototype.afterRender = function () {
-                afterRender.apply(this, arguments);
-
-                var el = this.el;
-
-                _.each(this.clickHandlers(), function (click) {
-                    el.click(click);
-                });
-
-                return this;
-            };
-
-            Obj.prototype.onClick = function (click, scope) {
-                var me = this;
-                scope = scope || this;
-
-                this.clickHandlers().push(function (ev) {
-                    ev.preventDefault();
-                    if (me.isDisabled) {
-                        return;
-                    }
-                    click.apply(scope, arguments);
-                });
-
-                return this;
-            };
-
-        },
-
-        enable: function (Obj) {
-            Obj.prototype.disable = function () {
-                this.demandEl();
-                this.el.addClass("disabled");
-                this.isDisabled = true;
-                return this;
-            };
-
-            Obj.prototype.enable = function () {
-                this.demandEl();
-                this.el.removeClass("disabled");
-                this.isDisabled = false;
-                return this;
-            };
-        },
-
-        cls: function (Obj) {
-            Obj.prototype.elClass = function (elCls) {
-                if (!elCls) {
-                    return this._elClass ? this._elClass : this._elClass = '';
-                }
-                
-                if (this.el) {
-                    this.el.removeClass(this.elClass());
-                    this.el.addClass(elCls);
-                }
-
-                this._elClass = elCls;
-                return this;
-            };
-        },
-
-        icon: function (Obj) {
-            Obj.prototype.icon = function (position, elClass) {
-                if (!position && !elClass) {
-                    return this._icon ? this._icon : this._icon = { position: null, elClass: null };
-                }
-                this._icon = { position: position, elClass: elClass };
-                return this;
-            };
-        },
-
-        options: function (Obj) {
-            Obj.prototype.optionsEl = abstractFn;
-
-            Obj.prototype.options = function () {
-                return this._options ? this._options : this._options = [];
-            };
-            
-            Obj.prototype.optionsById = function() {
-                return this._optionsById ? this._optionsById : this._optionsById = { };
-            };
-
-            Obj.prototype.add = function (id, label, icon, handler, scope) {
-                var dropOpt = decorate(new BtnOption(id, label));
-
-                if (icon) {
-                    dropOpt.icon('left', icon);
-                }
-                if (handler) {
-                    dropOpt.onClick(handler, scope);
-                }
-
-                this.options().push(dropOpt);
-                this.optionsById()[id] = dropOpt;
-
-                return dropOpt;
-            };
-
-            Obj.prototype.afterRender = function () {
-                Element.prototype.afterRender.apply(this, arguments);
-                this.renderOptions();
-                return this;
-            };
-
-            Obj.prototype.renderOptions = function () {
-                var me = this,
-                    el = this.optionsEl();
-
-                el.html('');
-
-                _.each(this.options(), function (opt) {
-                    me.optionsById[opt.id] = opt;
-                    opt.appendTo(el);
-                });
-            };
-        }
     };
 
     // Elements
@@ -191,46 +69,86 @@
         function Element(id) {
             demandNotNil(id, 'id');
             this.id = id;
-        }
 
-        Element.prototype.compile = abstractFn;
+            this.clickHandlers = [ ];
+            this.isDisabled = false;
+
+            this._elClass = '';
+            this._icon = { position: null, elClass: null };
+
+            this.decorate = function (Obj) {
+                return Obj;
+            };
+        }
 
         Element.prototype.demandEl = function () {
             demandNotNil(this.el, 'el');
             return true;
         };
 
-        Element.prototype.renderTo = function (container, method) {
-            demandNotNil(container || this.container, 'container');
+        Element.prototype.compile = abstractFn;
 
-            if (!container) {
-                container = this.container;
-            }
-
-            var $container = $(container);
-            $container[method || 'html'](this.compile());
-
-            return this.afterRender($container);
+        Element.prototype.renderTo = function (container) {
+            $(container).html(this.compile());
+            return this.afterRender();
         };
 
         Element.prototype.appendTo = function (container) {
-            return this.renderTo(container, 'append');
+            $(container).append(this.compile());
+            return this.afterRender();
         };
 
-        Element.prototype.afterRender = function (container) {
-            this.container = container;
-            this.el = $("#" + this.id);
+        Element.prototype.afterRender = function () {
+            var el = this.el = $("#" + this.id);
+
+            _.each(this.clickHandlers, function (click) {
+                el.click(click);
+            });       
+
+            return this;
+        };
+
+        Element.prototype.onClick = function (click, scope) {
+            var me = this;
+            scope = scope || this;
+
+            this.clickHandlers.push(function (ev) {
+                ev.preventDefault();
+                if (me.isDisabled) {
+                    return;
+                }
+                click.apply(scope, arguments);
+            });
+
+            return this;
+        };
+
+        Element.prototype.disable = function () {
+            this.demandEl();
+
+            this.el.addClass("disabled");
+            this.isDisabled = true;
+            return this;
+        };
+
+        Element.prototype.enable = function () {
+            this.demandEl();
+            
+            this.el.removeClass("disabled");
+            this.isDisabled = false;
             return this;
         };
 
         Element.prototype.hide = function () {
             this.demandEl();
+            
             this.el.hide();
             return this;
         };
 
         Element.prototype.show = function () {
             this.demandEl();
+            
             this.el.show();
             return this;
         };
@@ -239,6 +157,28 @@
             return visible ? this.show() : this.hide();
         };
 
+        Element.prototype.elClass = function (elCls) {
+            if (!elCls) {
+                return this._elClass;
+            }
+
+            if (this.el) {
+                this.el.removeClass(this.elClass());
+                this.el.addClass(elCls);
+            }
+            this._elClass = elCls;
+            return this;
+        };
+
+        Element.prototype.icon = function (position, elClass) {
+            if (!position && !elClass) {
+                return this._icon;
+            }
+
+            this._icon = { position: position, elClass: elClass };
+            return this;
+        };
+        
         return Element;
     } ());
 
@@ -258,9 +198,6 @@
 
         inherit(Html, Element);
 
-        D.enable(Html);
-        D.click(Html);
-        
         Html.prototype.compile = function () {
             return this.html;
         };
@@ -279,15 +216,12 @@
 
         inherit(Button, Element);
 
-        D.enable(Button);
-        D.click(Button);
-        D.cls(Button);
-        D.icon(Button);
-
         Button.prototype.compile = function () {
             return this.tpl({
-                id: this.id, label: this.label,
-                elClass: this.elClass(), icon: this.icon()
+                id: this.id, 
+                label: this.label,
+                elClass: this.elClass(), 
+                icon: this.icon()
             });
         };
 
@@ -310,27 +244,82 @@
             Button.apply(this, arguments);
 
             this.tpl = _.template($("#tpl-btnDropdown").html());
+
             this.type = 'dropdown';
             this.split = false;
+
+            this.options = [ ];
+            this.optionsById = { };
         }
 
         inherit(BtnDropdown, Button);
 
-        D.options(BtnDropdown);
+        BtnDropdown.prototype.add = function (id, label, icon, handler, scope) {
+            var dropOpt = this.decorate(new BtnOption(id, label));
 
-        BtnDropdown.prototype.optionsEl = function () {
-            return this.el.parent('div.btn-group').children('ul.dropdown-menu');
+            if (icon) {
+                dropOpt.icon('left', icon);
+            }
+            if (handler) {
+                dropOpt.onClick(handler, scope);
+            }
+
+            this.options.push(dropOpt);
+            this.optionsById[id] = dropOpt;
+
+            return dropOpt;
+        };
+
+        BtnDropdown.prototype.afterRender = function () {
+            Element.prototype.afterRender.apply(this, arguments);
+            this.renderOptions();
+            return this;
+        };
+
+        BtnDropdown.prototype.renderOptions = function () {
+            var me = this,
+                el = this.el.parent('div.btn-group').children('ul.dropdown-menu');
+
+
+            el.html('');
+
+            _.each(this.options, function (opt) {
+                me.optionsById[opt.id] = opt;
+                opt.appendTo(el);
+            });
         };
 
         BtnDropdown.prototype.compile = function () {
             return this.tpl({
-                id: this.id, label: this.label, elClass: this.elClass(),
-                type: this.type, icon: this.icon(), split: this.split
+                id: this.id, 
+                label: this.label, 
+                split: this.split,
+                type: this.type, 
+                elClass: this.elClass(),
+                icon: this.icon()
             });
         };
 
         return BtnDropdown;
     } ());
+
+    var Combobox = (function() {
+        function Combobox(options) {
+            Element.apply(this, arguments);
+
+            this.options = options;
+            this.tpl = _.template($("#tpl-combobox").html());
+        }
+
+        Combobox.prototype.compile = function () {
+            return this.tpl({
+                id: this.id,
+                options: this.options 
+            });
+        };
+
+        return Combobox;
+    }());
 
     var Toolbar = (function () {
         function Toolbar(id) {
@@ -346,16 +335,16 @@
 
         inherit(Toolbar, Element);
 
-        D.cls(Toolbar);
-
         Toolbar.prototype.addElement = function (position, element) {
             this.elements[position].push(element);
         };
 
         Toolbar.prototype.compile = function (el, method) {
             return this.tpl({
-                id: this.id, classLeft: this.classLeft,
-                classRight: this.classRight, elClass: this.elClass()
+                id: this.id, 
+                classLeft: this.classLeft,
+                classRight: this.classRight, 
+                elClass: this.elClass()
             });
         };
 
@@ -363,12 +352,12 @@
             Element.prototype.afterRender.apply(this, arguments);
 
             // MAY: rename, dont sounds like a clear name
-            this.renderElements('left', $(this.el).find("." + this.classLeft));
-            this.renderElements('right', $(this.el).find("." + this.classRight));
+            this.renderElements(this.elements.left, $(this.el).find("." + this.classLeft));
+            this.renderElements(this.elements.right, $(this.el).find("." + this.classRight));
         };
 
-        Toolbar.prototype.renderElements = function (position, container) {
-            _.each(this.elements[position], function (el) {
+        Toolbar.prototype.renderElements = function (elements, container) {
+            _.each(elements, function (el) {
                 el.appendTo(container);
             });
             return true;

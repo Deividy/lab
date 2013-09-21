@@ -1,39 +1,41 @@
+﻿<script type='text/javascript'>
+_.templateSettings = {                                                      
+    interpolate: /\{\{([\s\S]+?)\}\}/g, // {{ }}                            
+    evaluate:   /\{%([\s\S]+?)%\}/g    // {% %}                             
+}; 
+</script>
+
 <script type='text/template' id='tpl-button'>
-    <button type='button' <%= id ? "id='" + id + "'" : '' %> class='btn <%= elClass %>'>
-        <% if (icon.position === 'left') { %>
-            <i class='<%= icon.elClass %>'></i>&nbsp;
-        <% } %>
-        <%= label %>
-        <% if (icon.position === 'right') { %>
-            &nbsp;<i class='<%= icon.elClass %>'></i>
-        <% } %>
+    <button type='button' {{ id ? "id='" + id + "'" : '' }} class='btn {{ elClass }}'>
+        {% if (icon.position === 'left') { %}
+            <i class='{{ icon.elClass }}'></i>&nbsp;
+        {% } %}
+        {{ label }}
+        {% if (icon.position === 'right') { %}
+            &nbsp;<i class='{{ icon.elClass }}'></i>
+        {% } %}
     </button>
 </script>
 
 <script type='text/template' id='tpl-toolbar'>
-    <div class='toolbar navbar navbar-inner <%= elClass %>' id='<%= id %>'>
-        <div class='<%= classLeft %>'></div>
-        <div class='<%= classRight %>'></div>
+    <div class='toolbar navbar navbar-inner {{ elClass }}' id='{{ id }}'>
+        <div class='{{ classLeft }}'></div>
+        <div class='{{ classRight }}'></div>
     </div>
 </script>
 
 <script type='text/template' id='tpl-btnDropdown'>
-    <div class='btn-group <%= type %>'>
-        <button type='button' id='<%= id %>'
-            class='btn  <%= elClass %> <%= !split ? "dropdown-toggle' data-toggle='dropdown'" : "" %>' >
-                <% if (icon.position === 'left') { %>
-                    <i class='<%= icon.elClass %>'></i>&nbsp;
-                <% } %>
-
-                <%= label %>
-
-                <% if (icon.position === 'right') { %>
-                    &nbsp;<i class='<%= icon.elClass %>'></i>
-                <% } %>
-
-                <% if (split) { %>
-                    </button><button data-toggle='dropdown' class='btn dropdown-toggle <%= elClass %>'>
-                <% } %>
+    <div class='btn-group {{ type }}'>
+        <button type='button' id='{{ id }}'
+            class='btn  {{ elClass }} {{ !split ? "dropdown-toggle' data-toggle='dropdown'" : "" }}' >
+                {% if (icon.position === 'left') { %}
+                    <i class='{{ icon.elClass }}'></i>&nbsp;
+                {% } %}
+                {{ label }}
+                {% if (icon.position === 'right') { %}
+                    &nbsp;<i class='{{ icon.elClass }}'></i>
+                {% } %}
+                {{ split ? "</button><button data-toggle='dropdown' class='btn dropdown-toggle " + elClass + "'>" : " " }}
                 &nbsp;<span class='caret'></span>&nbsp;
         </button>
         <ul class='dropdown-menu'></ul>
@@ -41,55 +43,15 @@
 </script>
 
 <script type='text/template' id='tpl-btnOption'>
-    <li <%= id ? "id='" + id + "'" : '' %> class='<%= elClass %>'>
+    <li {{ id ? "id='" + id + "'" : '' }} class='{{ elClass }}'>
         <a href='#'>
-        <% if (icon.position === 'left') { %>
-            <i class='<%= icon.elClass %>'></i>&nbsp;
-        <% } %>
-        <%= label %>
-        <% if (icon.position === 'right') { %>
-            &nbsp;<i class='<%= icon.elClass %>'></i>
-        <% } %>
-    </a>
+            {% if (icon.position === 'left') { %}
+                <i class='{{ icon.elClass }}'></i>&nbsp;
+            {% } %}
+            {{ label }}
+            {% if (icon.position === 'right') { %}
+                &nbsp;<i class='{{ icon.elClass }}'></i>
+            {% } %}
+        </a>
     </li>
 </script>
-
-<!-- KO design -->
-<style>
-    .live {
-        padding: 10px;
-    }
-    .totals {
-        margin-top: 55px;
-        padding: 10px;
-    }
-    .strong {
-        font-weight: bold;
-    }
-    .col {
-        float: left;
-        padding: 5px;
-        border: 1px solid #f0f0f0;
-    }
-    .clearfix {
-        clear: both;
-    }
-</style>
-<div class='totals' data-bind='foreach: totals'>
-    <div class='col'>
-        <div class='strong' data-bind='text: label'></div>
-        <div data-bind='text: total'></div>
-    </div>
-</div>
-<div class='clearfix'></div>
-<div class='live'>
-    <a class='btn btn-success' data-bind='click: addLine'><i class='icon-plus'></i> Add</a>
-    <div data-bind="foreach: lines">
-        <span data-bind="text: $index"> </span>
-        <div class='col'>
-            <strong data-bind='text: label'></strong>
-            <span data-bind='text: val'></span>
-        </div>
-    </div>
-</div>
-
