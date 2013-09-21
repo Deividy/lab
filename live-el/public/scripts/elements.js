@@ -351,9 +351,11 @@
         Toolbar.prototype.afterRender = function () {
             Element.prototype.afterRender.apply(this, arguments);
 
-            // MAY: rename, dont sounds like a clear name
-            this.renderElements(this.elements.left, $(this.el).find("." + this.classLeft));
-            this.renderElements(this.elements.right, $(this.el).find("." + this.classRight));
+            var elLeft = $(this.el).find("." + this.classLeft),
+                elRight = $(this.el).find("." + this.classRight);
+
+            this.renderElements(this.elements.left, elLeft);
+            this.renderElements(this.elements.right, elRight);
         };
 
         Toolbar.prototype.renderElements = function (elements, container) {
