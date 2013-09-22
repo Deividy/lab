@@ -6,7 +6,7 @@ _.templateSettings = {
 </script>
 
 <script type='text/template' id='tpl-button'>
-    <button type='button' {{ id ? "id='" + id + "'" : '' }} class='btn {{ elClass }}'>
+    <button type='button' id='{{ id }}' class='btn {{ elClass }}'>
         {% if (icon.position === 'left') { %}
             <i class='{{ icon.elClass }}'></i>&nbsp;
         {% } %}
@@ -42,8 +42,8 @@ _.templateSettings = {
     </div>
 </script>
 
-<script type='text/template' id='tpl-btnOption'>
-    <li {{ id ? "id='" + id + "'" : '' }} class='{{ elClass }}'>
+<script type='text/template' id='subtpl-btnOption'>
+    <li id='{{ id }}' class='{{ elClass }}'>
         <a href='#'>
             {% if (icon.position === 'left') { %}
                 <i class='{{ icon.elClass }}'></i>&nbsp;
@@ -54,4 +54,12 @@ _.templateSettings = {
             {% } %}
         </a>
     </li>
+</script>
+
+<script type='text/template' id='tpl-select'>
+    <select id='{{ id }}' name='{{ name }}'></select>
+</script>
+
+<script type='text/template' id='subtpl-selectOption'>
+    <option value='{{ value }}'>{{ label }}</option>
 </script>

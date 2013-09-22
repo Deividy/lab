@@ -13,6 +13,9 @@
         btnOption: function (id, label) {
             return new BtnOption(id, label);
         },
+        select: function (id, name, options) {
+            return new Select(id, name, options);
+        },
         toolbar: function (id) {
             return new Toolbar(id);
         },
@@ -245,7 +248,7 @@
     var BtnOption = (function () {
         function BtnOption() {
             Button.apply(this, arguments);
-            this.tpl = _.template($('#tpl-btnOption').html());
+            this.tpl = _.template($('#subtpl-btnOption').html());
         }
 
         inherit(BtnOption, Button);
@@ -317,22 +320,36 @@
         return BtnDropdown;
     } ());
 
-    var Combobox = (function() {
-        function Combobox(options) {
+    var Select = (function() {
+        function Select(id, name, options) {
             Element.apply(this, arguments);
 
+            this.name = name;
             this.options = options;
-            this.tpl = _.template($("#tpl-combobox").html());
+            this.tpl = _.template($("#tpl-select").html());
+            this.optionTpl = _.template($("#subtpl-selectOption").html());
         }
 
-        Combobox.prototype.compile = function () {
+        inherit(Select, Element);
+
+        Select.prototype.compile = function () {
             return this.tpl({
                 id: this.id,
-                options: this.options 
+                name: this.name
             });
         };
 
-        return Combobox;
+        Select.prototype.renderOptions = function() {
+            var optionsHtml = '';
+            
+            _.each(this.options, function (option) {
+                optionsHtml += this.optionTpl(option);
+            }, this);
+
+            this.el.html(optionsHtml);
+        };
+
+        return Select;
     }());
 
     var Toolbar = (function () {
