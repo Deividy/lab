@@ -27,8 +27,13 @@
                     }
 
                     DecoratedE[key] = function() {
-                        var instance = decorate(E[key].apply(null, arguments));
-                        instance.decorate = decorate;
+                        var instance = decorate(E[key].apply(null, arguments)),
+                            instanceDecorate = instance.decorate;
+
+                        instance.decorate = function() {
+                            instanceDecorate.apply(this, arguments);
+                            return decorate.apply(this, arguments);
+                        };
 
                         return instance;
                     };
@@ -109,16 +114,23 @@
         };
 
         Element.prototype.onClick = function (click, scope) {
-            var me = this;
+            var me = this, handler;
+
             scope = scope || this;
 
-            this.clickHandlers.push(function (ev) {
+            handler = function(ev) {
                 ev.preventDefault();
                 if (me.isDisabled) {
                     return;
                 }
                 click.apply(scope, arguments);
-            });
+            };
+
+            this.clickHandlers.push(handler);
+
+            if (this.el) {
+                this.el.click(handler);
+            }
 
             return this;
         };
@@ -170,6 +182,8 @@
             return this;
         };
 
+        // SHOULD: 
+        // knows about the el and update DOM, like .elClass()
         Element.prototype.icon = function (position, elClass) {
             if (!position && !elClass) {
                 return this._icon;

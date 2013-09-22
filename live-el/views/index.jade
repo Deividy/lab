@@ -16,6 +16,13 @@ html
         script(type='text/javascript', src='/scripts/app.js')
 
         style.
+            .btn-info.disabled,
+            .btn-warning.disabled,
+            .btn-danger.disabled,
+            .btn-success.disabled {
+                background: #AAA !important;
+            }
+
             .left-position {
                 width:45%;
                 float: left;
@@ -39,6 +46,11 @@ html
             }
             .dropdown-menu {
                 text-align: left;
+            }
+            .dropdown-menu li a {
+                display: block;
+                padding: 10px;
+                margin: 3px;
             }
     body
         #top

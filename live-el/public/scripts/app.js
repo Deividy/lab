@@ -4,6 +4,12 @@ $(function() {
         tbBottom, bBack, bNext, bPark, bNew, bNavBar;
 
 
+    window.minder = { };
+
+    var E = window.E.decorate(function(instance) {
+        minder[instance.id] = instance;
+        return instance;
+    });
     // btn print (dealSummary)
     bPrint = E.btnDropdown('btnDealSummary', 'View/Print');
     bPrint.icon('left', 'icon-print');
