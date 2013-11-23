@@ -1,7 +1,7 @@
 var  MongoClient = require('mongodb').MongoClient,
      async = require('async');
 
-var connectionString = 'mongodb://lab:lab@54.200.142.61:27017/lab';
+var connectionString = 'mongodb://localhost:27017/lab';
 var stressCollection = 'stress';
 
 // we need to figure out the max instances of MongoClient our drive can handler
