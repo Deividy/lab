@@ -8,14 +8,14 @@ const server = net.createServer(function(conn) {
     conn.write(JSON.stringify({
         type: 'watching',
         file: filename
-    }));
+    }) + "[$\n$]");
 
     let watcher = fs.watch(filename, function () {
-        conn.write(JSON.stringify({
-            type: 'changed',
-            file: filename,
-            timestamp: Date.now()
-        }));
+        conn.write('{ "type": "changed", "file": "' + filename);
+
+        setTimeout(function() {
+            conn.write('", "timestamp": ' + Date.now() + ' }[$\n$]');
+        }, 100);
 
         conn.on('close', function () {
             console.log("Subscriber disconnected.");
