@@ -14,8 +14,10 @@ const LDJClient = function (stream) {
         self.buffer += data;
 
         while (self.boundary() !== -1) {
-            self.lastInput = self.buffer.substr(0, self.boundary());
-            self.buffer = self.buffer.substr(self.boundary() + 6);
+            let boundary = self.boundary();
+
+            self.lastInput = self.buffer.substr(0, boundary);
+            self.buffer = self.buffer.substr(boundary + 6);
 
             self.emit('message', JSON.parse(self.lastInput));
         }

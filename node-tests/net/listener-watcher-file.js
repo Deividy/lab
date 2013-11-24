@@ -11,10 +11,17 @@ const server = net.createServer(function(conn) {
     }) + "[$\n$]");
 
     let watcher = fs.watch(filename, function () {
+
         conn.write('{ "type": "changed", "file": "' + filename);
 
         setTimeout(function() {
             conn.write('", "timestamp": ' + Date.now() + ' }[$\n$]');
+            setTimeout(function () {
+                conn.write('{ "type": "changed", "file": "' + filename);
+                setTimeout(function () {
+                    conn.write('", "timestamp": ' + Date.now() + ' }[$\n$]');
+                }, 2000);
+            }, 50);
         }, 100);
 
         conn.on('close', function () {
