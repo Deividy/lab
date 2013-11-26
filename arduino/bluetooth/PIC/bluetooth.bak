@@ -1,0 +1,133 @@
+#include "D:\Projetos\Produtos ML\Modulo Bluetooth\PIC\bluetooth.h"
+  #ZERO_RAM
+
+#include <LCD_MSS.h>//Adiciona a nosso biblioteca para acionamento do diplay de LCD
+/******************************************************************************
+*  Ligações do LCD                                                            *
+*   D7 -> RD7 (PORTD 7)                                                       *
+*   D6 -> RD6 (PORTD 6)                                                       *
+*   D5 -> RD5 (PORTD 5)                                                       *
+*   D4 -> RD4 (PORTD 4)                                                       *
+*   RS -> RD3 (PORTD 3)                                                       *
+*   EN -> RD2 (PORTD 2)                                                       *
+*   R/W -> Deve ser conectado ao GND                                          *
+*   VCC -> Deve ser conectado ao +5V                                          *
+*   GND -> Deve ser conectado ao GND                                          *
+*   VO -> Deve ser conectado ao potenciômetro/trimpot de ajuste de brilho     *
+******************************************************************************/
+
+/******************************************************************************
+* Ligações do Sensor DHT-11                                                   *
+*  Out -> Pino RC2 do PORTC                                                   *
+*  "+" -> Deve ser conectado ao +5V                                           *
+*  "-" -> Deve ser conectado ao GND                                           *
+******************************************************************************/
+
+unsigned char dado = 0;//variável para armazenar o dado recebido pela porta serial (Recebido pelo bluetooth)
+short novoDado = 0;//Flag para indicar quando recebeu um novo dado pela porta serial (Deve ser limpado no programa)
+
+
+#use fast_io(c)//O controle de direção dos pinos (Entrada/Saida) será feito no programa
+#use fast_io(d)//O controle de direção dos pinos (Entrada/Saida) será feito no programa
+
+//Nomeação das portas
+#byte PORTC = 0x07 //Endereço do PORTC
+#byte PORTD = 0x08 //Endereço do PORTD
+
+#bit ledVermelho = PORTC.0 //Pino que deve ser conectado o LED vermelho
+#bit ledVerde = PORTC.1 //Pino que deve ser conectado o LED verde
+
+#int_RDA
+RDA_isr()
+   {
+   dado = getchar();//Le o dado recebido 
+   novoDado = 1;
+   }
+
+void main()
+{
+
+   setup_adc_ports(NO_ANALOGS);
+   setup_adc(ADC_OFF);
+   setup_psp(PSP_DISABLED);
+   setup_spi(SPI_SS_DISABLED);
+   setup_timer_0(RTCC_INTERNAL|RTCC_DIV_1);
+   setup_timer_1(T1_DISABLED);
+   setup_timer_2(T2_DISABLED,0,1);
+   setup_comparator(NC_NC_NC_NC);
+   setup_vref(FALSE);
+   // TODO: USER CODE!!
+   
+   enable_interrupts(GLOBAL);//Habilitando a chave geral das interrupções
+   enable_interrupts(INT_RDA);//Ativando a interrupção da recepção no canal serial
+   
+   set_tris_c(0b10000000);//
+   set_tris_d(0b00000011);//Configurando todos os pinos do PORTD que estão conectados ao LCD como saida
+   
+   PORTC = 0;
+   PORTD = 0;
+   
+   configura_lcd();//Chama a rotina que realiza as configurações básicas para o LCD funcionar
+   inicio_lcd();//Coloca o cursor no inicio (Quando usado)
+   limpa_lcd();//Limpa os dados do display
+   
+   //Mensagem de apresentação
+   linha_1_lcd(1);
+   caracter_lcd('C');
+   caracter_lcd('A');
+   caracter_lcd('R');
+   caracter_lcd('A');
+   caracter_lcd('C');
+   caracter_lcd('T');
+   caracter_lcd('E');
+   caracter_lcd('R');
+   caracter_lcd(':');
+   caracter_lcd(' ');
+   
+   linha_2_lcd(2);   
+   caracter_lcd('M');
+   caracter_lcd('S');
+   caracter_lcd('S');
+   caracter_lcd(' ');
+   caracter_lcd('E');
+   caracter_lcd('L');
+   caracter_lcd('E');
+   caracter_lcd('T');
+   caracter_lcd('R');
+   caracter_lcd('O');
+   caracter_lcd('N');
+   caracter_lcd('I');
+   caracter_lcd('C');
+   caracter_lcd('A');
+
+   //Fim da mensagem
+   
+   while(1)//Loop infinito do programa
+      {
+      if(novoDado)
+         {
+         novoDado = 0;
+         switch (dado)
+            {
+            case '1':
+            ledVermelho = 1;
+            break;
+            
+            case '2':
+            ledVermelho = 0;
+            break;
+            
+            case '3':
+            ledVerde = 1;
+            break;
+            
+            case '4':
+            ledVerde = 0;
+            break;
+            }
+         linha_1_lcd(11);
+         caracter_lcd(dado);
+         }
+      }
+
+}

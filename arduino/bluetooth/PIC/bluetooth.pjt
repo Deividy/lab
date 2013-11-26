@@ -1,0 +1,30 @@
+[PROJECT]
+Target=D:\Projetos\Produtos ML\Modulo Bluetooth\PIC\bluetooth.hex
+Development_Mode=
+Processor_Text=PIC16F877A
+ToolSuite=CCS
+Processor=0x877A
+[D:\Projetos\Produtos ML\Modulo Bluetooth\PIC\bluetooth]
+Type=4
+Path=
+FileList=
+BuildTool=
+OptionString=
+AdditionalOptionString=
+[mru-list]
+1=D:\Projetos\Produtos ML\Modulo Bluetooth\PIC\bluetooth.c
+[Windows]
+0=0000 %S 0 0 796 451 3 0
+[Opened Files]
+1=bluetooth.c
+2=..\..\Sensor de Umidade Temperatura DTH11\dth11_pic.c
+3=..\..\Quite controle IR\pic_628a.c
+4=
+5=LCD_MSS.h
+6=
+[Target Data]
+OptionString=-p +FM
+FileList=D:\Projetos\Produtos ML\Modulo Bluetooth\PIC\bluetooth.c
+[Units]
+Count=1
+1=bluetooth.c (main)
