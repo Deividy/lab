@@ -1,6 +1,18 @@
 const int pingPin = 11;
 const int inPin = 12;
-const int ledPin = 13;
+const int greenLed = 13;
+const int redLed = 10;
+
+const int sevenSegmentPins[8] = {
+    2,  // A
+    3,  // B
+    4,  // C
+    5,  // D
+    6,  // E
+    7,  // F
+    8,  // G
+    9  // DOT .
+};
 
 byte digits[11][8] = {
     { 1, 1, 1, 1, 1, 1, 1, 0 }, //  .
@@ -17,17 +29,13 @@ byte digits[11][8] = {
 };
 
 void setup () {
-    pinMode(2, OUTPUT); // A
-    pinMode(3, OUTPUT); // B
-    pinMode(4, OUTPUT); // C
-    pinMode(5, OUTPUT); // D
-    pinMode(6, OUTPUT); // E
-    pinMode(7, OUTPUT); // F
-    pinMode(8, OUTPUT); // G
-    pinMode(9, OUTPUT); // DOT .
+    for (int pinIdx = 0; pinIdx < 8; ++pinIdx) {
+        pinMode(sevenSegmentPins[pinIdx], OUTPUT);
+    }
 
     // led
-    pinMode(ledPin, OUTPUT);
+    pinMode(greenLed, OUTPUT);
+    pinMode(redLed, OUTPUT);
     
     writeDigitInIndex(0);
 
@@ -53,19 +61,25 @@ void loop () {
     cm = msToCm(duration);
 
     if (cm >= 10) {
-        digitalWrite(ledPin, HIGH);
+        analogWrite(greenLed, 25 * cm);
+        digitalWrite(redLed, LOW);
+        writeDigitInIndex(0);
     } else {
-        digitalWrite(ledPin, LOW);
+        analogWrite(redLed, 255 / cm);
+        digitalWrite(greenLed, LOW);
+        writeDigit(cm);
     }
 
-    delay(200);
+    delay(300);
+}
+
+void writeDigit (int digit) {
+    writeDigitInIndex(digit + 1);
 }
 
 void writeDigitInIndex (byte index) {
-    byte pin = 2;
-    for (byte seg = 0; seg < 8; ++seg) {
-        digitalWrite(pin, digits[index][seg]);
-        ++pin;
+    for (byte idx = 0; idx < 8; ++idx) {
+        digitalWrite(sevenSegmentPins[idx], digits[index][idx]);
     }
 }
 
@@ -75,3 +89,5 @@ long msToCm(long microseconds) {
     // object we take half of the distance travelled
     return microseconds / 29 / 2;
 }
+
+
