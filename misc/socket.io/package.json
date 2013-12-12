@@ -1,0 +1,9 @@
+{
+    "name": "lab",
+    "version": "0.0.1",
+    "private": false,
+    "dependencies": {
+        "socket.io": "",
+        "jade": ""
+    }
+}
