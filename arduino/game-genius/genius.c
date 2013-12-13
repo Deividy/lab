@@ -101,7 +101,7 @@ void gameOver() {
     lcd.print("Game over!");
 
     lcd.setCursor(0, 1);
-    lcd.print("Press the button");
+    lcd.print("Push the button");
 };
 
 
@@ -118,7 +118,7 @@ void showHigherLevel () {
     lcd.print(higherLevel);
 
     lcd.setCursor(0, 1);
-    lcd.print("Press the button");
+    lcd.print("Push the button");
 };
 
 void showLevel () {
@@ -237,7 +237,7 @@ void setup () {
     lcd.clear();
 
     lcd.setCursor(0, 0);
-    lcd.print("Press the button");
+    lcd.print("Push the button");
 };
 
 void loop () {
