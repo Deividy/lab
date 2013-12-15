@@ -1,0 +1,9 @@
+{
+    "name": "node-book-tools",
+    "version": "0.0.1",
+    "description": "Test DB",
+    "author": "Deividy <deividyz@gmail.com>",
+    "dependencies": {
+        "request": "~2.30.0"
+    }
+}
