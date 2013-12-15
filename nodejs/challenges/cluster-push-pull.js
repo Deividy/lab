@@ -35,7 +35,7 @@ pull.on('message', function (data) {
 });
 
 cluster.on('online', function (worker) {
-    worker.pull = zmq.socket('pull').connect('ipc://boss.ipc'),
+    worker.pull = zmq.socket('pull').connect('ipc://boss.ipc');
     worker.push = zmq.socket('push').connect('ipc://supervisor.ipc');
 
     worker.pull.on('message', function (data) {
