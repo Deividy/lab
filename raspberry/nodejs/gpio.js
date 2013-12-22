@@ -5,27 +5,27 @@ const fs = require('fs'),
 
 const exec = child_process.exec;
 
-const path = "/sys/devices/virtual/gpio";
+const gpioPath = "/sys/devices/virtual/gpio";
 const gpioAdmin = "gpio-admin";
 
 const gpioToPin = {
-    0: 3, // SDA
-    2: 4, // SDA
+    0: 3,   // SDA
+    2: 4,   // SDA
 
-    3: 6, // SCL
-    1: 5, // SCL
+    3: 6,   // SCL
+    1: 5,   // SCL
 
-    4: 7, // GPCLK0
+    4: 7,   // GPCLK0
 
     10: 19, // MOSI
 
-    9: 21, // MISO
-    11: 23, //  SCLK
+    9: 21,  // MISO
+    11: 23, // SCLK
 
-    8: 24, // CE0
-    7: 25, // CE1
+    8: 24,  // CE0
+    7: 25,  // CE1
 
-    14: 8, // TXD
+    14: 8,  // TXD
     15: 10, // RXD
 
     18: 12, //  PCM_CLK
@@ -48,10 +48,7 @@ const demandDirection = function (direction) {
 };
 
 const throwIfError = function (err) {
-    if (err) {
-        throw new Error(err);
-    }
-
+    if (err) throw new Error(err);
 }
 
 var Gpio = (function () {
@@ -62,7 +59,7 @@ var Gpio = (function () {
 
         this.gpio = gpio;
         this.pin = gpioToPin[gpio];
-        this.file = path + "/gpio" + this.pin;
+        this.file = gpioPath + "/gpio" + this.pin;
 
         exec(gpioAdmin + '/export' + this.pin, function (err) {
             throwIfError(err);
