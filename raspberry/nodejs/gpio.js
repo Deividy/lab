@@ -1,7 +1,8 @@
 'use strict';
 
 const fs = require('fs'),
-      child_proccess = require('child_process');
+      child_proccess = require('child_process'),
+      _ = require('underscore');
 
 const exec = child_process.exec;
 
@@ -47,6 +48,19 @@ const demandDirection = function (direction) {
     }
 };
 
+const demandValue = function (value) {
+    if (value != '1' && value != '0') {
+        throw new Error("Value " + value + " is not a valid value!");
+    }
+};
+
+const demandCallback = function (callback) {
+    if (!_.isFunction(callback)) {
+        throw new Error("Invalid callback");
+    }
+
+};
+
 const throwIfError = function (err) {
     if (err) throw new Error(err);
 }
@@ -84,9 +98,26 @@ var Gpio = (function () {
     };
 
     Gpio.prototype.readDirection = function (callback) {
-        fs.readFile(this.file, 'utf8', callback);
+        demandCallback(callback);
+
+        fs.readFile(this.file + "/direction", 'utf8', callback);
+    };
+
+    Gpio.prototype.read = function (callback) {
+        demandCallback(callback);
+
+        fs.readFile(this.file + "/value", callback);
+    };
+
+    Gpio.prototype.write = function (value, callback) {
+        demandValue(value);
+        demandCallback(callback);
+
+        fs.writeFile(this.file + "/value", value.toString(), 'utf8', callback);
     };
 
     return Gpio;
 }());
 
+
+module.exports = Gpio;
