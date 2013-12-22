@@ -1,11 +1,13 @@
 'use strict';
 
+// Requires
 const fs = require('fs'),
       child_proccess = require('child_process'),
       _ = require('underscore');
 
 const exec = child_process.exec;
 
+// GPIO CONFIG
 const gpioPath = "/sys/devices/virtual/gpio";
 const gpioAdmin = "gpio-admin";
 
@@ -36,6 +38,7 @@ const gpioToPin = {
     25: 22
 };
 
+// Demands
 const demandGPIO = function (gpio) {
     if (!gpioToPin[gpio]) {
         throw new Error("Invalid GPIO " + gpio);
@@ -43,7 +46,7 @@ const demandGPIO = function (gpio) {
 };
 
 const demandDirection = function (direction) {
-    if (direction != 'in' && direction != 'out') {
+    if (direction !== 'in' && direction !== 'out') {
         throw new Error("Invalid Direction " + direction);
     }
 };
