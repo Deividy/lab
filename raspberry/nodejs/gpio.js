@@ -55,24 +55,32 @@ var Gpio = (function () {
     function Gpio(gpio, direction) {
         demandGPIO(gpio);
         demandDirection(direction);
-        const self = this;
 
         this.gpio = gpio;
+        this.direction = direction;
+
         this.pin = gpioToPin[gpio];
         this.file = gpioPath + "/gpio" + this.pin;
+
+        this.open();
+    }
+
+    Gpio.prototype.open = function () {
+        const self = this;
 
         exec(gpioAdmin + '/export' + this.pin, function (err) {
             throwIfError(err);
 
-            self.direction(direction);
+            self.writeDirection();
         });
-    }
+    };
 
-    Gpio.prototype.direction = function (direction) {
-        if (!direction) return this.direction;
+    Gpio.prototype.close = function () {
+        exec(gpioAdmin + "/unexport" + this.pin, throwIfError);
+    };
 
-        this.direction = direction;
-        fs.writeFile(this.file + "/direction", direction, throwIfError);
+    Gpio.prototype.writeDirection = function () {
+        fs.writeFile(this.file + "/direction", this.direction, throwIfError);
     };
 
     Gpio.prototype.readDirection = function (callback) {
