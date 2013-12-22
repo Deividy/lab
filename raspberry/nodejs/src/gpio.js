@@ -2,14 +2,10 @@
 
 // Requires
 const fs = require('fs'),
-      child_proccess = require('child_process'),
       _ = require('underscore');
 
-const exec = child_process.exec;
-
 // GPIO CONFIG
-const gpioPath = "/sys/devices/virtual/gpio";
-const gpioAdmin = "gpio-admin";
+const gpioPath = "/sys/class/gpio";
 
 const gpioToPin = {
     0: 3,   // SDA
@@ -78,26 +74,24 @@ var Gpio = (function () {
 
         this.pin = gpioToPin[gpio];
         this.file = gpioPath + "/gpio" + this.pin;
-
-        this.open();
     }
 
-    Gpio.prototype.open = function () {
+    Gpio.prototype.open = function (callback) {
         const self = this;
 
-        exec(gpioAdmin + '/export' + this.pin, function (err) {
-            throwIfError(err);
+        fs.writeFile(gpioPath + '/export', this.pin, function (err) {
+	    if (err) return callback(err);
 
-            self.writeDirection();
+            self.writeDirection(callback);
         });
     };
 
-    Gpio.prototype.close = function () {
-        exec(gpioAdmin + "/unexport" + this.pin, throwIfError);
+    Gpio.prototype.close = function (callback) {
+        fs.writeFile(gpioPath + "/unexport", this.pin, callback);
     };
 
-    Gpio.prototype.writeDirection = function () {
-        fs.writeFile(this.file + "/direction", this.direction, throwIfError);
+    Gpio.prototype.writeDirection = function (callback) {
+        fs.writeFile(this.file + "/direction", this.direction, callback);
     };
 
     Gpio.prototype.readDirection = function (callback) {
@@ -116,7 +110,7 @@ var Gpio = (function () {
         demandValue(value);
         demandCallback(callback);
 
-        fs.writeFile(this.file + "/value", value.toString(), 'utf8', callback);
+        fs.writeFile(this.file + "/value", value, callback);
     };
 
     return Gpio;
@@ -124,3 +118,23 @@ var Gpio = (function () {
 
 
 module.exports = Gpio;
+
+let gp = new Gpio(24, 'out');
+gp.close(function(err, res) {
+	console.log(err);
+	console.log(res);
+	gp.open(function(err, res) {
+		console.log(err);
+		console.log(res);
+		gp.write(1, function (err, res) {
+			console.log(err);
+			console.log(res);
+
+			while (true) {
+	
+			}
+		});	
+
+	});
+});
+
