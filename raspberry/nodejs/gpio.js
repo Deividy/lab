@@ -118,23 +118,3 @@ var Gpio = (function () {
 
 
 module.exports = Gpio;
-
-let gp = new Gpio(24, 'out');
-gp.close(function(err, res) {
-	console.log(err);
-	console.log(res);
-	gp.open(function(err, res) {
-		console.log(err);
-		console.log(res);
-		gp.write(1, function (err, res) {
-			console.log(err);
-			console.log(res);
-
-			while (true) {
-	
-			}
-		});	
-
-	});
-});
-
