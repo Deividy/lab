@@ -5,7 +5,7 @@ const fs = require('fs'),
       _ = require('underscore');
 
 // GPIO CONFIG
-const gpioPath = "/sys/class/gpio";
+const gpioPath = "/sys/class/gpio/";
 
 const gpioToPin = {
     0: 3,   // SDA
@@ -64,7 +64,7 @@ const throwIfError = function (err) {
     if (err) throw new Error(err);
 }
 
-var Gpio = (function () {
+const Gpio = (function () {
     function Gpio(gpio, direction) {
         demandGPIO(gpio);
         demandDirection(direction);
@@ -73,13 +73,13 @@ var Gpio = (function () {
         this.direction = direction;
 
         this.pin = gpioToPin[gpio];
-        this.file = gpioPath + "/gpio" + this.pin;
+        this.file = gpioPath + "gpio" + this.pin + '/';
     }
 
     Gpio.prototype.open = function (callback) {
         const self = this;
 
-        fs.writeFile(gpioPath + '/export', this.pin, function (err) {
+        fs.writeFile(gpioPath + 'export', this.pin, function (err) {
 	    if (err) return callback(err);
 
             self.writeDirection(callback);
@@ -87,30 +87,30 @@ var Gpio = (function () {
     };
 
     Gpio.prototype.close = function (callback) {
-        fs.writeFile(gpioPath + "/unexport", this.pin, callback);
+        fs.writeFile(gpioPath + "unexport", this.pin, callback);
     };
 
     Gpio.prototype.writeDirection = function (callback) {
-        fs.writeFile(this.file + "/direction", this.direction, callback);
+        fs.writeFile(this.file + "direction", this.direction, callback);
     };
 
     Gpio.prototype.readDirection = function (callback) {
         demandCallback(callback);
 
-        fs.readFile(this.file + "/direction", 'utf8', callback);
+        fs.readFile(this.file + "direction", callback);
     };
 
     Gpio.prototype.read = function (callback) {
         demandCallback(callback);
 
-        fs.readFile(this.file + "/value", callback);
+        fs.readFile(this.file + "value", callback);
     };
 
     Gpio.prototype.write = function (value, callback) {
         demandValue(value);
         demandCallback(callback);
 
-        fs.writeFile(this.file + "/value", value, callback);
+        fs.writeFile(this.file + "value", value, callback);
     };
 
     return Gpio;
