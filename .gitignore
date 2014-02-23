@@ -2,3 +2,4 @@
 node_modules
 *.ipc
 cache/
+libuv/bin
