@@ -247,37 +247,41 @@ var hareAndTortoise = function (sentinelTop) {
     var tortoise = sentinelTop;
     var hare = sentinelTop;
 
-    var catches = 0;
+    var hareHasCatchTortoise = false;
+    var foundStart = false;
+    var foundEnd = false;
 
-    while (catches !== 3) {
+    while (!foundEnd) {
         if (!hare.next || !hare.next.next) {
             return false;
         }
 
         tortoise = tortoise.next;
-        if (catches === 0) {
+
+        if (!hareHasCatchTortoise) {
             hare = hare.next.next;
-        } else if (catches === 1) {
+        } else if (!foundStart) {
             hare = hare.next;
         }
 
         if (hare === tortoise) {
-            if (catches === 0) {
+            if (!hareHasCatchTortoise) {
                 hare = sentinelTop;
-                catches = 1;
+                hareHasCatchTortoise = true;
             } else {
-                catches = 2;
+                foundStart = true;
             }
         }
 
-        if (tortoise.next === hare && catches === 2) {
-            catches = 3;
+        if (foundStart && tortoise.next === hare) {
+            foundEnd = true;
         }
     }
 
     console.log('');
     console.log('hare (start loop):');
     console.log(hare);
+    console.log('');
     console.log('tortoise (end loop):');
     console.log(tortoise);
 
