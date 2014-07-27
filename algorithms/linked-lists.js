@@ -9,12 +9,23 @@ var Cell = (function () {
     return Cell;
 }());
 
+var sentinel = new Cell()
+var a = new Cell('A');
+var b = new Cell('B');
+var c = new Cell('C');
+
+sentinel.next = a;
+a.next = b;
+b.next = c;
+
 var iterate = function (top, fn) {
     while (top.next) {
         fn(top.next);
         top = top.next;
     }
 };
+
+iterate(sentinel, function (cell) { console.log(cell.value); });
 
 var find = function (top, target) {
     while (top) {
@@ -26,6 +37,8 @@ var find = function (top, target) {
 
     throw new Error("Value: '" + target + "' not found");
 };
+
+assert.equal(find(sentinel, 'C') === c, true);
 
 var findBefore = function (top, target) {
     while (top.next) {
@@ -39,10 +52,40 @@ var findBefore = function (top, target) {
     throw new Error("Value: '" + target + "' not found");
 };
 
+assert.equal(findBefore(sentinel, 'A') === sentinel, true);
+
 var addAtBeginning = function (top, newCell) {
     newCell.next = top.next;
     top.next = newCell;
 };
+
+var d = new Cell('D');
+addAtBeginning(sentinel, d);
+
+assert.equal(findBefore(sentinel, 'D') === sentinel, true);
+assert.equal(findBefore(sentinel, 'A') === d, true);
+
+var insert = function (afterMe, newCell) {
+    newCell.next = afterMe.next;
+    afterMe.next = newCell;
+};
+
+var e = new Cell('E');
+insert(d, e);
+
+assert.equal(findBefore(sentinel, 'E') === d, true);
+assert.equal(findBefore(sentinel, 'A') === e, true);
+
+var deleteAfter = function (afterMe) {
+    next = afterMe.next.next;
+    delete afterMe.next.value;
+    delete afterMe.next;
+
+    afterMe.next = next;
+};
+
+deleteAfter(d);
+assert.equal(findBefore(sentinel, 'A') === d, true);
 
 var addAtEnd = function (top, newCell) {
     while (top.next) {
@@ -53,18 +96,11 @@ var addAtEnd = function (top, newCell) {
     newCell.next = null;
 };
 
-var insert = function (afterMe, newCell) {
-    newCell.next = afterMe.next;
-    afterMe.next = newCell;
-};
+var f = new Cell('F');
+addAtEnd(sentinel, f);
 
-var deleteAfter = function (afterMe) {
-    next = afterMe.next.next;
-    delete afterMe.next.value;
-    delete afterMe.next;
-
-    afterMe.next = next;
-};
+assert.equal(findBefore(sentinel, 'F') === c, true);
+assert.equal(f.next, null);
 
 var destroyList = function (top) {
     cells = [ ];
@@ -80,48 +116,14 @@ var destroyList = function (top) {
     }
 };
 
-// fun;
-var sentinel = new Cell()
-var a = new Cell('A');
-var b = new Cell('B');
-var c = new Cell('C');
-
-sentinel.next = a;
-a.next = b;
-b.next = c;
-
-iterate(sentinel, function (cell) { console.log(cell.value); });
-
-assert.equal(find(sentinel, 'C') === c, true);
-assert.equal(findBefore(sentinel, 'A') === sentinel, true);
-
-var d = new Cell('D');
-addAtBeginning(sentinel, d);
-
-assert.equal(findBefore(sentinel, 'D') === sentinel, true);
-assert.equal(findBefore(sentinel, 'A') === d, true);
-
-var e = new Cell('E');
-insert(d, e);
-
-assert.equal(findBefore(sentinel, 'E') === d, true);
-assert.equal(findBefore(sentinel, 'A') === e, true);
-deleteAfter(d);
-
-assert.equal(findBefore(sentinel, 'A') === d, true);
-
-var f = new Cell('F');
-addAtEnd(sentinel, f);
-
-assert.equal(findBefore(sentinel, 'F') === c, true);
-assert.equal(f.next, null);
-
 destroyList(sentinel);
 assert.equal(sentinel.value, undefined);
 assert.equal(sentinel.next, undefined);
 assert.equal(a.value, undefined);
 assert.equal(a.next, undefined);
 
+
+// --- circular tests --- /
 
 var sentinel = new Cell()
 var a = new Cell('A');
@@ -145,10 +147,7 @@ addAtEnd(sentinel, g);
 addAtEnd(sentinel, h);
 addAtEnd(sentinel, i);
 
-// circular
 i.next = d;
-
-// --------------- //
 
 var fixLoopMarkingCells = function (sentinelTop) {
     var hasLoop = false;
@@ -240,6 +239,11 @@ var hasLoopUsingReverseStrategy = function (sentinelTop) {
 
 
 assert.equal(hasLoopUsingReverseStrategy(sentinel), false);
+
+iterate(sentinel, function (cell) {
+    console.log(cell.value);
+});
+
 i.next = d;
 assert.equal(hasLoopUsingReverseStrategy(sentinel), true);
 
@@ -278,19 +282,16 @@ var hareAndTortoise = function (sentinelTop) {
         }
     }
 
-    console.log('');
-    console.log('hare (start loop):');
-    console.log(hare);
-    console.log('');
-    console.log('tortoise (end loop):');
-    console.log(tortoise);
-
     tortoise.next = null;
     return true;
 };
 
+assert.equal(i.next, d);
 assert.equal(hareAndTortoise(sentinel), true);
 assert.equal(hasLoopUsingReverseStrategy(sentinel), false);
 assert.equal(hareAndTortoise(sentinel), false);
+assert.equal(i.next, null);
 
-
+iterate(sentinel, function (cell) {
+    console.log(cell.value);
+});
