@@ -247,40 +247,53 @@ iterate(sentinel, function (cell) {
 i.next = d;
 assert.equal(hasLoopUsingReverseStrategy(sentinel), true);
 
+// T = number of steps that pass before the tortoise enters the loop
+// H = the distance from the beginning of the loop to the hare's location after T steps
+// L = the number of cells inside the loop
+// 
+// #1 If you move across T cells within the loop, you end up H cells away from where you started
+// #2 When the hare catches the tortoise, the two animals are H cells short of the beinning of the loop
 var hareAndTortoise = function (sentinelTop) {
     var tortoise = sentinelTop;
     var hare = sentinelTop;
 
     var hareHasCatchTortoise = false;
-    var foundStart = false;
-    var foundEnd = false;
+    var hareIsAtStart = false;
 
-    while (!foundEnd) {
-        if (!hare.next || !hare.next.next) {
+    while (hare.next) {
+        if (!hare.next.next) {
             return false;
         }
 
         tortoise = tortoise.next;
 
-        if (!hareHasCatchTortoise) {
-            hare = hare.next.next;
-        } else if (!foundStart) {
-            hare = hare.next;
+        // if the hare is at start of the loop we dont want to walk with more
+        if (!hareIsAtStart) {
+            if (hareHasCatchTortoise) {
+                hare = hare.next;
+            } else {
+                hare = hare.next.next;
+            }
         }
 
+        // hare catch tortoise
         if (hare === tortoise) {
             if (!hareHasCatchTortoise) {
                 hare = sentinelTop;
                 hareHasCatchTortoise = true;
-            } else {
-                foundStart = true;
+                continue;
             }
+
+            hareIsAtStart = true;
         }
 
-        if (foundStart && tortoise.next === hare) {
-            foundEnd = true;
+        if (hareIsAtStart && tortoise.next === hare) {
+            // at that point tortoise is at the end of loop and hare
+            // is at start of the loop, so we can break it
+            break;
         }
     }
+
 
     tortoise.next = null;
     return true;
