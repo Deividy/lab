@@ -287,5 +287,6 @@ var hareAndTortoise = function (sentinelTop) {
 
 assert.equal(hareAndTortoise(sentinel), true);
 assert.equal(hasLoopUsingReverseStrategy(sentinel), false);
+assert.equal(hareAndTortoise(sentinel), false);
 
 
