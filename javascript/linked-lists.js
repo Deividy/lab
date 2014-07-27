@@ -276,10 +276,10 @@ var hareAndTortoise = function (sentinelTop) {
     }
 
     console.log('');
-    console.log('tortoise (end loop):');
-    console.log(tortoise);
     console.log('hare (start loop):');
     console.log(hare);
+    console.log('tortoise (end loop):');
+    console.log(tortoise);
 
     tortoise.next = null;
     return true;
