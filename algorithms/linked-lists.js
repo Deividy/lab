@@ -308,3 +308,36 @@ assert.equal(i.next, null);
 iterate(sentinel, function (cell) {
     console.log(cell.value);
 });
+
+
+var DoublyCell = (function () {
+    function DoublyCell (value) {
+        this.value = value;
+        this.next = null;
+        this.prev = null;
+    }
+
+    return DoublyCell;
+}());
+
+var topSentinel = new DoublyCell();
+var bottomSentinel = new DoublyCell();
+
+var insert = function (afterMe, newCell) {
+    newCell.next = afterMe.next;
+    afterMe.next = newCell;
+
+    newCell.next.prev = newCell;
+    newCell.prev = afterMe;
+};
+
+topSentinel.next = bottomSentinel;
+bottomSentinel.prev = topSentinel;
+
+var a = new DoublyCell('A');
+var b = new DoublyCell('B');
+
+insert(topSentinel, a);
+insert(a, b);
+assert.equal(topSentinel.next, a);
+assert.equal(bottomSentinel.prev, b);
