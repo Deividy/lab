@@ -29,5 +29,17 @@ Object.defineProperty(Array.prototype, 'maximum', {
     }
 });
 
+Object.defineProperty(Array.prototype, 'averange', {
+    get: function () {
+        var total = 0;
+        this.forEach(function (item) {
+            total += item;
+        });
+
+        return total / this.length;
+    }
+});
+
 assert.equal([ 5, 10, 200, 1, 3, 0 ].minimum, 0);
 assert.equal([ 5, 10, 200, 1, 3, 0 ].maximum, 200);
+assert.equal([ 5, 10, 200, 1, 3, 0 ].averange, 36.5);
