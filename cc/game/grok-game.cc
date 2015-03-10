@@ -32,15 +32,16 @@ class Mage : public Human {
             return s;
         };
 
-        void addSword (Sword& w) { swords.push_back(w); };
+        void addSword (Sword* w) { swords.push_back(w); };
 
         ~Mage() {
+            for (auto s : swords) delete s;
         }
 
     private:
         std::string m_name;
         std::vector<Spell> spells;
-        std::vector<Sword> swords;
+        std::vector<Sword*> swords;
 };
 
 int main () {
@@ -69,7 +70,9 @@ int main () {
     std::cout << "And your first spell is: " << s.name;
     std::cout << ", with power of " << s.power << ".\n";
 
-    Sword sw(1);
+    Sword* sw = new Sword(userName.length());
     player.addSword(sw);
+
+    std::cout << "You also won a sword ! With power of " << sw->power() << "\n";
 
 };
