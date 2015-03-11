@@ -20,6 +20,10 @@ class Mage : public Human {
         Mage(std::string name) : m_name { name } { }
         std::string name () { return m_name; };
 
+        // You cannot copy a mage! :)
+        Mage(const Mage&) = delete;
+        Mage& operator=(const Mage&) = delete;
+
 
         Spell addSpell(std::string name, double power)  {
             Spell s;

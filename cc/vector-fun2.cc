@@ -1,6 +1,5 @@
 #include <iostream>
 
-
 class Vector {
     private:
         double* elem;
@@ -15,6 +14,15 @@ class Vector {
 
         // copy assignment
         Vector& operator=(const Vector& a);
+
+        // move constructor
+        Vector(Vector&& a);
+
+        // move assignment
+        // && means rvalue reference. The word rvalue is intended to complement
+        // '1value', which roughly means 'something that can appear on the
+        // left-hand side of an assignment'
+        Vector& operator=(Vector&& a);
 
         double& operator[](int i);
         const double& operator[](int i) const;
@@ -50,6 +58,12 @@ Vector& Vector::operator=(const Vector& a) {
     sz = a.sz;
 
     return *this;
+}
+
+// move constructor
+Vector::Vector(Vector&& a) : elem{a.elem}, sz{a.sz} {
+    a.elem = nullptr;
+    a.sz = 0;
 }
 
 int main () {
