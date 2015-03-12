@@ -47,3 +47,4 @@ solving a specific set of problems [and] has five important features:"
 
 ## Glossary
 - RAII - Resource Acquisition Is Initialization
+- mutex - mutual exclusion object
