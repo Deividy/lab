@@ -1,8 +1,9 @@
 #include <iostream>
 
+template<typename T>
 class Vector {
     private:
-        double* elem;
+        T* elem;
         int sz;
 
     public:
@@ -24,28 +25,32 @@ class Vector {
         // left-hand side of an assignment'
         Vector& operator=(Vector&& a);
 
-        double& operator[](int i);
-        const double& operator[](int i) const;
+        T& operator[](int i);
+        const T& operator[](int i) const;
 
         int size() const;
 };
 
 
 // default constructor
-Vector::Vector(int s) : elem{new double[s]}, sz{s} {}
+template<typename T>
+Vector<T>::Vector(int s) : elem{new T[s]}, sz{s} {}
 
 // operator []
-double& Vector::operator[] (int i) { return elem[i]; }
+template<typename T>
+T& Vector<T>::operator[] (int i) { return elem[i]; }
 
 // copy constructor
-Vector::Vector(const Vector& a) : elem{new double[a.sz]}, sz{a.sz} {
+template<typename T>
+Vector<T>::Vector(const Vector& a) : elem{new T[a.sz]}, sz{a.sz} {
     for (int i = 0; i != sz; ++i) {
         elem[i] = a.elem[i];
     }
 }
 
 // copy assignment
-Vector& Vector::operator=(const Vector& a) {
+template<typename T>
+Vector<T>& Vector<T>::operator=(const Vector& a) {
     double* p = new double[a.sz];
     for (int i = 0; i != a.sz; ++i) {
         p[i] = a.elem[i];
@@ -61,19 +66,20 @@ Vector& Vector::operator=(const Vector& a) {
 }
 
 // move constructor
-Vector::Vector(Vector&& a) : elem{a.elem}, sz{a.sz} {
+template<typename T>
+Vector<T>::Vector(Vector&& a) : elem{a.elem}, sz{a.sz} {
     a.elem = nullptr;
     a.sz = 0;
 }
 
 int main () {
-    Vector a(5);
+    Vector<double> a(5);
     a[0] = 1;
     a[1] = 5;
 
-    Vector b(a);
+    Vector<double> b(a);
 
-    Vector c = b;
+    Vector<double> c = b;
 
     a[0] = 2;
     a[1] = 3;
@@ -86,4 +92,9 @@ int main () {
     std::cout << "Vector b[1] = " << b[1] << "\n";
     std::cout << "Vector c[1] = " << c[1] << "\n";
 
+    Vector<char> d(5);
+    d[0] = 'a';
+    d[1] = 'b';
+
+    std::cout << "Vector d[0] = " << d[0] << " | d[1] = " << d[1] << "\n";
 };
