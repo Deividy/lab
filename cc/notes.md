@@ -43,8 +43,24 @@ solving a specific set of problems [and] has five important features:"
 - Know your standard algorithms and prefer them over handwritten loops.
 - If iterator use gets tedious, define container algorithms
 - You can use the range-for loop for a complete container.
+
+- Use resource handles to manage resources (RAII)
+- Use `unique_ptr` to refer to objects of polymorphic type
+- Use `shared_ptr` to refer to shared objects
+- Use type-safe mechanisms for concurrency
+- Minimize the use of shared data.
+- Dont choose shared data for communication because of 'efficiency' widthout thought and preferably not without measurements.
+- Dont assume something, prove it!
+- Think in terms of concurrent tasks, rather than threads.
+- A library doesnt have to be large or complicated to be useful.
+- Time your programs before making claims about efficiency.
+- You can write code to explicitly depend on properties of types.
+- Use regular expressions for simple pattern matching.
+- Dont try to do serious numeric computation using only the language; use libraries.
+- Properties of numeric types are accesible through `numeric_limits`
                                    
 
 ## Glossary
 - RAII - Resource Acquisition Is Initialization
 - mutex - mutual exclusion object
+- smatch - s stands for sub or string and smatch is a vector of sub-matches of type string.
