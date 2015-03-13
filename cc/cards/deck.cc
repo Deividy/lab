@@ -5,7 +5,48 @@
 
 using namespace deck;
 
+const char nypes[] = { 'C', 'H', 'S', 'D' };
+char allCards[] = {
+    'A', '2', '3', '4', '5', '6', '7', '8', '9', 'T', 'J', 'Q', 'K'
+};
+char trucoCards[] = {
+    'A', '2', '3', 'T', 'J', 'Q', 'K'
+};   
+
 Deck::Deck(const std::vector<Card>& cards) : cards{cards} {}
+
+std::vector<Card> buidCards (char cards[]) {
+    int nypesLength = sizeof(nypes) / sizeof(*nypes);
+
+    std::vector<Card> d;
+
+    for (int i = 0; i < nypesLength; ++i) {
+        Nype nype = { nypes[i] };
+
+        for (int n = 0; cards[n] != 0; ++n) {
+            Card c = { cards[n], nype };
+            d.push_back(c);
+        }
+    }
+
+    return d;
+};
+
+Deck createDeck (DeckType type) {
+    std::vector<Card> cards;
+
+    switch (type) {
+        case DeckType::full:
+            cards = buidCards(allCards);
+
+        case DeckType::truco:
+            cards = buidCards(trucoCards);
+    }
+
+    // SHOULD initialize TrucoDeck and return
+    Deck dc(cards);
+    return dc;
+};
 
 const Card& Deck::operator[](int i) {
     return cards[i];
@@ -23,8 +64,12 @@ void Deck::shuffle() {
     for (unsigned i = 0; i < cards.size(); ++i) {
         int r = rand() % cards.size();
 
-        if (r == 52) {
+        if (r == cards.size()) {
             r = 0;
+        }
+
+        if (i == r) {
+            continue;
         }
 
         Card card = cards[i];
@@ -36,27 +81,8 @@ void Deck::shuffle() {
 };
 
 int main () {
-    const char nypes[] = { 'C', 'H', 'S', 'D' };
-    const char cards[] = {
-        'A', '2', '3', '4', '5', '6', '7', '8', '9', 'T', 'J', 'Q', 'K'
-    };
+    Deck dc = createDeck(DeckType::full);
 
-    int nypesLength = sizeof(nypes) / sizeof(*nypes);
-    int cardsLength = sizeof(cards) / sizeof(*cards);
-
-    std::vector<Card> d;
-
-    // add all cards
-    for (unsigned i = 0; i < nypesLength; ++i) {
-        Nype nype = { nypes[i] };
-
-        for (unsigned n = 0; n < cardsLength; ++n) {
-            Card c = { cards[n], nype };
-            d.push_back(c);
-        }
-    }
-
-    Deck dc(d);
     std::cout << "first card \n";
     std::cout << dc[0].value << " " << dc[0].nype.value << "\n";
 
@@ -71,5 +97,12 @@ int main () {
 
     std::cout << "last card \n";
     std::cout << dc[51].value << " " << dc[51].nype.value << "\n";
+
+    std::cout << "Truco deck \n\n";
+    
+
+    Deck truco = createDeck(DeckType::truco);
+    truco.shuffle();
+    truco.printDeck();
 };
 
