@@ -23,6 +23,10 @@ void Deck::shuffle() {
     for (unsigned i = 0; i < cards.size(); ++i) {
         int r = rand() % cards.size();
 
+        if (r == 52) {
+            r = 0;
+        }
+
         Card card = cards[i];
         Card randomCard = cards[r];
 
@@ -42,6 +46,7 @@ int main () {
 
     std::vector<Card> d;
 
+    // add all cards
     for (unsigned i = 0; i < nypesLength; ++i) {
         Nype nype = { nypes[i] };
 
@@ -52,7 +57,19 @@ int main () {
     }
 
     Deck dc(d);
+    std::cout << "first card \n";
+    std::cout << dc[0].value << " " << dc[0].nype.value << "\n";
+
+    std::cout << "last card \n";
+    std::cout << dc[51].value << " " << dc[51].nype.value << "\n";
+
+    std::cout << "\nShuffle \n\n";
     dc.shuffle();
-    dc.printDeck();
+
+    std::cout << "first card \n";
+    std::cout << dc[0].value << " " << dc[0].nype.value << "\n";
+
+    std::cout << "last card \n";
+    std::cout << dc[51].value << " " << dc[51].nype.value << "\n";
 };
 
