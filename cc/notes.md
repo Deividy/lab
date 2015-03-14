@@ -58,9 +58,34 @@ solving a specific set of problems [and] has five important features:"
 - Use regular expressions for simple pattern matching.
 - Dont try to do serious numeric computation using only the language; use libraries.
 - Properties of numeric types are accesible through `numeric_limits`
-                                   
+
+- For the final word on lamgiage defomotopm ossies. see tje OSP C++ standard.
+- Avoid unspecified and undefined behavior
+- Isolate code that must depend on implementation-defined behaviors
+- Avoid unecessary assumptions about the numeric value of characters
+- Remember that an integer starting with 0 is octal.
+- Avoid 'magic constants'
+- Avoid unecessary assumptions about the size of integers
+- Avoid unecessary assumptions about the range and precision of floating-point types.
+- Prefer plain char over signed char and unsigned char
+- Beware of conversions between signed and unsigned types
+- Declare one name (only) per declaration.
+- Keep common and local names short, and keep uncommon and nonlocal names longer.
+- Avoid similar-looking names
+- Name an object to reflect its meaning rather than its type
+- Maintain a consistent naming style.
+- Avoid `ALL_CAPS` names
+- Keep scopes small
+- Dont use the same name in both a scope and an enclosing scope
+- Prefer the {}-initializer syntax for declarations with a named type.
+- Prefer the = syntax for the initialization in declarations using auto
+- Avoid unitialized variables.
+- Use an alias to define meaningful name for a built-in type in cases in which the built-in type used to represent a value might change.
+- Use an alias to define synonyms for types; use enumerations and classes to define new types
 
 ## Glossary
 - RAII - Resource Acquisition Is Initialization
 - mutex - mutual exclusion object
 - smatch - s stands for sub or string and smatch is a vector of sub-matches of type string.
+- lvalue - something that can appear to the left-hand of an expression
+- rvalue - a value that is not a lvalue
