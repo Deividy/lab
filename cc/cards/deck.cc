@@ -5,7 +5,7 @@
 
 using namespace deck;
 
-const char nypes[] = { 'C', 'H', 'S', 'D' };
+char nypes[] { 'C', 'H', 'S', 'D' };
 char allCards[] = {
     'A', '2', '3', '4', '5', '6', '7', '8', '9', 'T', 'J', 'Q', 'K'
 };
@@ -15,12 +15,10 @@ char trucoCards[] = {
 
 Deck::Deck(const std::vector<Card>& cards) : cards{cards} {}
 
-std::vector<Card> buidCards (char cards[]) {
-    int nypesLength = sizeof(nypes) / sizeof(*nypes);
-
+std::vector<Card> buidCards (const char* cards) {
     std::vector<Card> d;
 
-    for (int i = 0; i < nypesLength; ++i) {
+    for (int i = 0; i < 4; ++i) {
         Nype nype = { nypes[i] };
 
         for (int n = 0; cards[n] != 0; ++n) {
@@ -38,9 +36,11 @@ Deck createDeck (DeckType type) {
     switch (type) {
         case DeckType::full:
             cards = buidCards(allCards);
+            break;
 
         case DeckType::truco:
             cards = buidCards(trucoCards);
+            break;
     }
 
     // SHOULD initialize TrucoDeck and return
@@ -48,9 +48,7 @@ Deck createDeck (DeckType type) {
     return dc;
 };
 
-const Card& Deck::operator[](int i) {
-    return cards[i];
-};
+const Card& Deck::operator[](const int i) { return cards[i]; };
 
 void Deck::printDeck() {
     for (Card c : cards) {
@@ -98,7 +96,7 @@ int main () {
     std::cout << "last card \n";
     std::cout << dc[51].value << " " << dc[51].nype.value << "\n";
 
-    std::cout << "Truco deck \n\n";
+    std::cout << "\nTruco deck \n\n";
     
 
     Deck truco = createDeck(DeckType::truco);
