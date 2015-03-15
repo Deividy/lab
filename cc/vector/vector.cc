@@ -41,7 +41,7 @@ Vector<T>::Vector(Vector&& a) : elem{a.elem}, sz{a.sz} {
 }
 
 template<typename T>
-void Vector<T>::insert (T value) {
+void Vector<T>::push_back (T value) {
     elem[sz] = value;
     sz++;
 };

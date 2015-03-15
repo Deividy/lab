@@ -28,5 +28,5 @@ class Vector {
 
         int size() const;
 
-        void insert(T value);
+        void push_back(T value);
 };

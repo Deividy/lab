@@ -75,7 +75,7 @@ void Deck::shuffle () {
     }
 };
 
-Card& Deck::getRandom () {
+const Card& Deck::getRandom () {
     srand(time(NULL));
 
     short size = m_cards.size();
@@ -83,6 +83,6 @@ Card& Deck::getRandom () {
 
     putCardOut(i);
 
-    Card &c = m_cards_out[m_cards_out.size() - 1];
+    const Card &c = m_cards_out[m_cards_out.size() - 1];
     return c;
 };

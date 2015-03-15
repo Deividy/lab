@@ -19,7 +19,7 @@ namespace deck {
             void prepareTruco();
             void putCardOut(short i);
 
-            Card& getRandom();
+            const Card& getRandom();
 
         private:
             vector<Card> m_cards;
