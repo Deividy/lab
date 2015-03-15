@@ -1,3 +1,6 @@
+Notes about C++
+---
+
 All knowledge was taken from http://www.stroustrup.com/4th.html
 
 An algorithm is "a finite set of rules which gives a sequence of operations for
@@ -8,7 +11,11 @@ solving a specific set of problems [and] has five important features:"
 - Output
 - Effectiveness
 
-## Advices
+---
+
+Advices
+---
+
 
 - Focus on programming techniques, not on language features.
 - Express ideas directly in code.
@@ -24,6 +31,8 @@ solving a specific set of problems [and] has five important features:"
 - Use function templates to represent general algorithms.
 - Use function objects, including lambdas, to represent policies and actions.
 - Use type and template aliases to provide a uniform notation for types that may vary among similar types or among implementations.
+
+---
 
 - Don't reivent the wheel; use libraries.
 - When you have a choice; prefer the standard library over other libraries.
@@ -44,6 +53,8 @@ solving a specific set of problems [and] has five important features:"
 - If iterator use gets tedious, define container algorithms
 - You can use the range-for loop for a complete container.
 
+---
+
 - Use resource handles to manage resources (RAII)
 - Use `unique_ptr` to refer to objects of polymorphic type
 - Use `shared_ptr` to refer to shared objects
@@ -58,6 +69,8 @@ solving a specific set of problems [and] has five important features:"
 - Use regular expressions for simple pattern matching.
 - Dont try to do serious numeric computation using only the language; use libraries.
 - Properties of numeric types are accesible through `numeric_limits`
+
+---
 
 - For the final word on lamgiage defomotopm ossies. see tje OSP C++ standard.
 - Avoid unspecified and undefined behavior
@@ -83,7 +96,28 @@ solving a specific set of problems [and] has five important features:"
 - Use an alias to define meaningful name for a built-in type in cases in which the built-in type used to represent a value might change.
 - Use an alias to define synonyms for types; use enumerations and classes to define new types
 
-## Glossary
+---
+
+- Keep use of pointers simple and straightforward.
+- Avoid nontrivial pointers arithmetic.
+- Take care not to write beyond the bounds of an array.
+- Avoid multidimensional arrays; define suitable containers instead.
+- Use `nullptr` rather than `0` or `NULL`
+- Use containers (e.g. `vector`, `array`, and `valarray`) rather than build-in (C-style) arrays
+- Use `string` rather than zero-terminaed arrays of `char`.
+- Use raw strings for string literals with complicated uses of backslash.
+- Prefer `const` reference arguments to plain reference arguments.
+- Use rvalue references (only) for forwarding and move semantics.
+- Keep pointers that represent ownership inside handle classes.
+- Avoid `void*` except in low-level code
+- Use `const` pointers and `const` references to express immutability in interfaces.
+- Prefer references to pointers as arguments, except where 'no object' is reasonable option.
+
+---
+
+Glossary
+---
+
 - RAII - Resource Acquisition Is Initialization
 - mutex - mutual exclusion object
 - smatch - s stands for sub or string and smatch is a vector of sub-matches of type string.
