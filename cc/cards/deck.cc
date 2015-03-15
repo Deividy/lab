@@ -5,64 +5,61 @@
 
 using namespace deck;
 
-char nypes[] { 'C', 'H', 'S', 'D' };
-char allCards[] = {
+const char nypes[] { 'C', 'H', 'S', 'D' };
+const char cardValues[] {
     'A', '2', '3', '4', '5', '6', '7', '8', '9', 'T', 'J', 'Q', 'K'
 };
-char trucoCards[] = {
-    'A', '2', '3', 'T', 'J', 'Q', 'K'
-};   
 
-Deck::Deck(const std::vector<Card>& cards) : cards{cards} {}
-
-std::vector<Card> buidCards (const char* cards) {
-    std::vector<Card> d;
-
-    for (int i = 0; i < 4; ++i) {
-        Nype nype = { nypes[i] };
-
-        for (int n = 0; cards[n] != 0; ++n) {
-            Card c = { cards[n], nype };
-            d.push_back(c);
+Deck::Deck () {
+    for (const char &nype : nypes) {
+        for (const char &card : cardValues) {
+            Card c { card, nype };
+            m_cards.push_back(c);
         }
     }
-
-    return d;
 };
 
-Deck createDeck (DeckType type) {
-    std::vector<Card> cards;
-
-    switch (type) {
-        case DeckType::full:
-            cards = buidCards(allCards);
-            break;
-
-        case DeckType::truco:
-            cards = buidCards(trucoCards);
-            break;
-    }
-
-    // SHOULD initialize TrucoDeck and return
-    Deck dc(cards);
-    return dc;
-};
-
-const Card& Deck::operator[](const int i) { return cards[i]; };
-
-void Deck::printDeck() {
-    for (Card c : cards) {
-        std::cout << c.value << " " << c.nype.value << "\n";
+void Deck::print() {
+    for (Card &c : m_cards) {
+        cout << "Card: " << c.value << " - " << c.nype << "\n";
     }
 };
 
-void Deck::shuffle() {
+void Deck::putCardOut (short i) {
+    Card &c = m_cards[i];
+
+    m_cards_out.push_back(move(c));
+    m_cards.erase(m_cards.begin() + i);
+};
+
+void Deck::prepareTruco () {
+    short idx = m_cards.size();
+
+    while (--idx > 0) {
+        Card &card = m_cards[idx];
+
+        switch (card.value) {
+            case '4':
+            case '5':
+            case '6':
+            case '7':
+            case '8':
+            case '9':
+                putCardOut(idx);
+                break;
+        }
+    }
+};
+
+void Deck::shuffle () {
     srand(time(NULL));
 
-    for (unsigned i = 0; i < cards.size(); ++i) {
-        int r = rand() % cards.size();
+    short size = m_cards.size();
 
-        if (r == cards.size()) {
+    for (short i = 0; i < size; ++i) {
+        short r = rand() % size;
+
+        if (r == size) {
             r = 0;
         }
 
@@ -70,37 +67,22 @@ void Deck::shuffle() {
             continue;
         }
 
-        Card card = cards[i];
-        Card randomCard = cards[r];
+        Card card = m_cards[i];
+        Card randomCard = m_cards[r];
 
-        cards[i] = randomCard;
-        cards[r] = card;
+        m_cards[i] = move(randomCard);
+        m_cards[r] = move(card);
     }
 };
 
-int main () {
-    Deck dc = createDeck(DeckType::full);
+Card& Deck::getRandom () {
+    srand(time(NULL));
 
-    std::cout << "first card \n";
-    std::cout << dc[0].value << " " << dc[0].nype.value << "\n";
+    short size = m_cards.size();
+    short i = rand() % size; 
 
-    std::cout << "last card \n";
-    std::cout << dc[51].value << " " << dc[51].nype.value << "\n";
+    putCardOut(i);
 
-    std::cout << "\nShuffle \n\n";
-    dc.shuffle();
-
-    std::cout << "first card \n";
-    std::cout << dc[0].value << " " << dc[0].nype.value << "\n";
-
-    std::cout << "last card \n";
-    std::cout << dc[51].value << " " << dc[51].nype.value << "\n";
-
-    std::cout << "\nTruco deck \n\n";
-    
-
-    Deck truco = createDeck(DeckType::truco);
-    truco.shuffle();
-    truco.printDeck();
+    Card &c = m_cards_out[m_cards_out.size() - 1];
+    return c;
 };
-

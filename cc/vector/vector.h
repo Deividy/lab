@@ -27,4 +27,6 @@ class Vector {
         const T& operator[](int i) const;
 
         int size() const;
+
+        void insert(T value);
 };

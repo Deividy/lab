@@ -2,9 +2,9 @@
 #include "vector.cc"
 
 int main () {
-    Vector<double> a(5);
-    a[0] = 1;
-    a[1] = 5;
+    Vector<double> a(0);
+    a.insert(1);
+    a.insert(5);
 
     Vector<double> b(a);
 

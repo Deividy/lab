@@ -3,37 +3,27 @@
 using namespace std;
 
 namespace deck {
-    struct Nype {
-        char value;
-    };
 
     struct Card {
         char value;
-        Nype nype;
+        char nype;
     };
 
     class Deck {
         public:
-            Deck(const vector<Card>& cards);
+            Deck();
             ~Deck() {}
 
-            const Card& operator[](int i);
-            void printDeck();
             void shuffle();
+            void print();
+            void prepareTruco();
+            void putCardOut(short i);
+
+            Card& getRandom();
 
         private:
-            vector<Card> cards;
+            vector<Card> m_cards;
+            vector<Card> m_cards_out;
     };
 
-    class TrucoDeck : public Deck {
-        public:
-            TrucoDeck(const vector<Card>& cards);
-            ~TrucoDeck() {}
-
-        private:
-            vector<Card> cards;
-    
-    };
-
-    enum class DeckType { full, truco };
 }

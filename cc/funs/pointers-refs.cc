@@ -77,4 +77,22 @@ int main () {
     cout << p2 << "\n";
     cout << p3 << "\n";
     cout << p4 << "\n";
+
+    cout << "\n\n";
+ 
+    vector<int> v { 1, 5, 6 };
+    vector<int> *p = &v;
+
+    p->push_back(2);
+    v.push_back(3);
+
+    for (auto val : v) {
+        cout << val << "\n";
+    }
+
+    cout << "\nPointer \n";
+
+    for (auto &val : *p) {
+        cout << val << "\n";
+    }    
 };
