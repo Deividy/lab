@@ -5,15 +5,20 @@ using namespace deck;
 using namespace std;
 
 int main () {
-    Player a;
+    string playerName;
+    cout << "Whats your nick? \n";
 
-    Card c { 'A', 'H' };
+    cin >> playerName;
 
-    Card* p = &c;
+    Player a(playerName);
+    Player b("John Doe");
 
-    a.addCard(p);
+    vector<Player> players { a, b };
 
-    c.value = '2';
-    a.print();
+    Truco truco(players);
+
+    truco.startRound();
+
+    truco.playBestCard();
 };
 

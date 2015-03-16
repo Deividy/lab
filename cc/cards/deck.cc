@@ -105,7 +105,7 @@ void Deck::reset () {
     }
 };
 
-const Card& Deck::getRandom () {
+Card* Deck::getRandom () {
     srand(time(NULL));
 
     short size = m_cards.size();
@@ -113,18 +113,71 @@ const Card& Deck::getRandom () {
 
     putCardOut(i);
 
-    const Card &c = m_cards_out[m_cards_out.size() - 1];
+    Card* c = &m_cards_out[m_cards_out.size() - 1];
     return c;
 };
 
-Player::Player() { };
+Player::Player(string name) : m_name{name} { };
 
 void Player::addCard(Card* c) {
     m_cards.push_back(c);
 };
 
 void Player::print() {
+    cout << "Cards of: " << m_name << "\n";
+
     for (auto &c : m_cards) {
         cout << "Card: " << c->value << " - " << c->nype << "\n";
+    }
+
+    cout << "\n";
+};
+
+
+Truco::Truco(vector<Player> players) : m_players{players} {
+    m_deck.prepareTruco();
+};
+
+void Truco::startRound() {
+    m_deck.reset();
+
+    m_roundWinners.clear();
+    m_usedCards.clear();
+
+    for (Player &p : m_players) {
+        for (short i = 0; i < 3; ++i) {
+            p.addCard(m_deck.getRandom());
+        }
+    }
+
+    m_manilha = m_deck.getRandom();
+
+    if (m_roundWinners.size() > 0) {
+        Player* lastWinner = m_roundWinners[m_roundWinners.size() - 1];
+
+        for (short i = 0; i < m_players.size(); ++i) {
+            if (m_players[i].name() == lastWinner->name()) {
+                m_currentPlayerIndex = i;
+            }
+        }
+    } else {
+        m_currentPlayerIndex = 0;
+    }
+};
+
+void Truco::print() {
+    for (Player &p : m_players) {
+        p.print();
+    }
+
+    cout << "Manilha: " << m_manilha->value << " - " << m_manilha->nype << "\n";
+};
+
+void Truco::playBestCard() {
+    Player& player = m_players[m_currentPlayerIndex];
+
+    for (Card* c : player.cards()) {
+        cout << c->value;
+    
     }
 };

@@ -21,7 +21,7 @@ namespace deck {
             void putCardOut(const short i);
             void putCardIn(const short i);
 
-            const Card& getRandom();
+            Card* getRandom();
 
         private:
             vector<Card> m_cards;
@@ -32,13 +32,16 @@ namespace deck {
 
     class Player {
         public:
-            Player();
+            Player(string name);
             ~Player() {}
 
             void addCard(Card* c);
             void print();
 
+            vector<Card*> cards() { return m_cards; };
+            const string name () { return m_name; };
         private:
+            string m_name;
             vector<Card*> m_cards;
             vector<Card*> m_cards_out;
     
@@ -46,10 +49,22 @@ namespace deck {
 
     class Truco {
         public:
-            Truco();
+            Truco(vector<Player> players);
             ~Truco() {}
+
+            void startRound();
+            void print();
+            void play(Player& player, Card& card);
+            void playBestCard();
 
         private:
             vector<Player> m_players;
+            vector<Player*> m_roundWinners;
+            vector<Card*> m_usedCards;
+            pair<Player*, short> m_points;
+            short m_currentPlayerIndex;
+            
+            Card* m_manilha;
+            Deck m_deck;
     };
 }
