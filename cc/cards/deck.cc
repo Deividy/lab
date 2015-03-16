@@ -10,6 +10,21 @@ const char cardValues[] {
     'A', '2', '3', '4', '5', '6', '7', '8', '9', 'T', 'J', 'Q', 'K'
 };
 
+bool isTrucoCard (const Card& card)  {
+    switch (card.value) {
+        case '4':
+        case '5':
+        case '6':
+        case '7':
+        case '8':
+        case '9':
+            return false;
+    }  
+
+    return true;
+};
+    
+
 Deck::Deck () {
     for (const char &nype : nypes) {
         for (const char &card : cardValues) {
@@ -25,28 +40,30 @@ void Deck::print() {
     }
 };
 
-void Deck::putCardOut (short i) {
+void Deck::putCardOut (const short i) {
     Card &c = m_cards[i];
 
     m_cards_out.push_back(move(c));
     m_cards.erase(m_cards.begin() + i);
 };
 
+void Deck::putCardIn (const short i) {
+    Card &c = m_cards_out[i];
+
+    m_cards.push_back(move(c));
+    m_cards_out.erase(m_cards_out.begin() + i);
+};
+
 void Deck::prepareTruco () {
     short idx = m_cards.size();
+
+    isTruco = true;
 
     while (--idx > 0) {
         Card &card = m_cards[idx];
 
-        switch (card.value) {
-            case '4':
-            case '5':
-            case '6':
-            case '7':
-            case '8':
-            case '9':
-                putCardOut(idx);
-                break;
+        if (!isTrucoCard(card)) {
+            putCardOut(idx);
         }
     }
 };
@@ -75,6 +92,19 @@ void Deck::shuffle () {
     }
 };
 
+void Deck::reset () {
+    short idx = m_cards_out.size();
+
+    while (--idx > 0) {
+        Card &card = m_cards_out[idx];
+
+        if (!isTruco || isTrucoCard(card)) {
+            putCardIn(idx);
+            continue;
+        }
+    }
+};
+
 const Card& Deck::getRandom () {
     srand(time(NULL));
 
@@ -85,4 +115,16 @@ const Card& Deck::getRandom () {
 
     const Card &c = m_cards_out[m_cards_out.size() - 1];
     return c;
+};
+
+Player::Player() { };
+
+void Player::addCard(Card* c) {
+    m_cards.push_back(c);
+};
+
+void Player::print() {
+    for (auto &c : m_cards) {
+        cout << "Card: " << c->value << " - " << c->nype << "\n";
+    }
 };

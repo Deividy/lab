@@ -5,21 +5,15 @@ using namespace deck;
 using namespace std;
 
 int main () {
-    Deck dc;
-    dc.prepareTruco();
-    dc.shuffle();
+    Player a;
 
+    Card c { 'A', 'H' };
 
-    Card c1 = dc.getRandom();
-    Card c2 = dc.getRandom();
-    Card c3 = dc.getRandom();
+    Card* p = &c;
 
-    cout << "Card 1: " << c1.value << " - " << c1.nype << "\n";
-    cout << "Card 2: " << c2.value << " - " << c2.nype << "\n";
-    cout << "Card 3: " << c3.value << " - " << c3.nype << "\n";
+    a.addCard(p);
 
-    cout << "\n\nDeck now \n\n";
-
-    dc.print();
+    c.value = '2';
+    a.print();
 };
 
