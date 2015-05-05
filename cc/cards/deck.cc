@@ -173,6 +173,7 @@ void Truco::print() {
     cout << "Manilha: " << m_manilha->value << " - " << m_manilha->nype << "\n";
 };
 
+// SHOULD delegate to player
 void Truco::playBestCard() {
     Player& player = m_players[m_currentPlayerIndex];
 

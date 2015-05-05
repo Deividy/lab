@@ -115,6 +115,30 @@ Advices
 
 ---
 
+- When compactness of data is important, lay out structure data members with larger members before smmaller ones.
+- Use bit-fields to represent hardware-imposed data layouts.
+- Dont naively try to optimize memory comsumption by packing several values into a single byte.
+- Use unions to save space (represent alternatives) and never for type conversion.
+- Use enumerations to represent sets of named constants.
+- Prefer enum classes over plain enums to minimize surprises.
+- Define operations on enumerations for safe and simple use.
+
+---
+
+- Dont declare a variable until you have a value to initialize it with.
+- Prefer a switch-statement to an if-statement when there is a choice.
+- Prefer a range-for-statement to an if-statement when there is a choice.
+- Prefer a for-statement to a while-statement when there is an obvious loop variable.
+- Prefer a while-statement to a for-statement when there is no obvious loop variable.
+- Avoid do-statements.
+- Avoid goto.
+- Keep comments crisp.
+- Dont say in comments what can be clearly stated in code.
+- State intent in comments.
+- Maintain a consistent indentation.
+
+---
+
 Glossary
 ---
 
