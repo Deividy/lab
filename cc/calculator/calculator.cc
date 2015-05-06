@@ -10,8 +10,10 @@ double Calculator::error(const string& s) {
     return 1;
 }
 
-double Calculator::prim (bool get) {
-    if (get) ts->get();
+double Calculator::prim (bool need_get) {
+    if (need_get) {
+        ts->get();
+    }
 
     switch (ts->current().kind) {
         case Kind::number: { // necessary, variable declaration
@@ -21,7 +23,7 @@ double Calculator::prim (bool get) {
             return v;
         }
 
-        case Kind::name: {
+        case Kind::name: { // necessary, variable declaration
             double& v = table[ts->current().string_value];
             if (ts->get().kind == Kind::assign) {
                 v = expr(true);
@@ -34,7 +36,7 @@ double Calculator::prim (bool get) {
         case Kind::minus:
             return -prim(true);
 
-        case Kind::lp: {
+        case Kind::lp: { // necessary, variable declaration
             auto e = expr(true);
 
             if (ts->current().kind != Kind::rp) {
@@ -51,8 +53,8 @@ double Calculator::prim (bool get) {
     }
 }        
 
-double Calculator::term (bool get) {
-    double left = prim(get);
+double Calculator::term (bool need_get) {
+    double left = prim(need_get);
 
     while (true) {
         switch (ts->current().kind) {
@@ -74,8 +76,8 @@ double Calculator::term (bool get) {
     }
 }
 
-double Calculator::expr (bool get) {
-    double left = term(get);
+double Calculator::expr (bool need_get) {
+    double left = term(need_get);
 
     while (true) {
         switch (ts->current().kind) {

@@ -1,7 +1,6 @@
 #include <iostream>
 #include "calculator.cc"
 
-using namespace std;
 using namespace calculator;
 
 int main () {

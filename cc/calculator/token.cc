@@ -22,11 +22,17 @@ double Token_stream::error(const string& s) {
 Token Token_stream::get() {
     char ch;
 
-    do {
+    // DRY {
+    // but I do belive that its better than use the do...while()
+    if (!ip->get(ch)) {
+        return ct = { Kind::end };
+    }
+    while (ch != '\n' && isspace(ch)) {
         if (!ip->get(ch)) {
             return ct = { Kind::end };
         }
-    } while (ch != '\n' && isspace(ch));
+    }
+    // }
 
     switch (ch) {
         case 0:
@@ -71,12 +77,12 @@ Token Token_stream::get() {
 
             ct.string_value = ch;
             while (ip->get(ch)) {
-                if (isalnum(ch)) {
-                    ct.string_value += ch;
-                } else {
+                if (!isalnum(ch)) {
                     ip->putback(ch);
                     break;
                 }
+
+                ct.string_value += ch;
             }
 
             ct.kind = Kind::name;
