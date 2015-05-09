@@ -139,6 +139,18 @@ Advices
 
 ---
 
+- Prefer the standard library to other libraries and to "handcrafted code"
+- Use character-level input only when you have to.
+- When reading, always consider ill-formed(badly formed) input.
+- Prefer suitable abstractions (classes, algorithms, etc.) to direct use of language features (e.g., ints, statements).
+- Avoid complicated expressions.
+- If in doubt about operator precedence, parenthesize
+- Avoid expressions with undefined order of evaluation.
+- Avoid narrowing conversions.
+- Define symbolic constants to avoid "magic constants".
+
+---
+
 Glossary
 ---
 
