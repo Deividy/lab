@@ -151,6 +151,23 @@ Advices
 
 ---
 
+- Prefer prefix `++` over suffix `++`.
+- Use resource handles to avoid leaks, premature deletion, and double deletion.
+- Dont put objects on the free store if you dont have to; prefer scoped variables.
+- Avoid `naked new` and `naked delete`.
+- Use RAII
+- Prefer a named function object to a lambda if the operation requires comments.
+- Prefer a named function object to a lambda if the operation is generally usefull.
+- Keep lambdas short.
+- For maintainability and correctness, be careful about capture by reference.
+- Let the compiler deduce the return type of a lambda.
+- Use the `T{e}` notation for construction.
+- Avoid explicity type conversion (casts).
+- When explicity type conversion is necessary, prefer a named cast.
+- Consider using a run-time checked cast, such as `narrow_cast<>()`, for conversion between numeric types.
+
+---
+
 Glossary
 ---
 

@@ -32,7 +32,6 @@ double Calculator::prim (bool need_get) {
             return v;
         }
 
-
         case Kind::minus:
             return -prim(true);
 
