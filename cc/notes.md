@@ -168,6 +168,32 @@ Advices
 
 ---
 
+- "Package" meaningful operations as carefully named `functions`.
+- A function should perform a single logical operation.
+- Keep functions **short** and **clear**
+- Dont return pointers or references to local variables.
+- If a function may have to be evaluated at compile time, declare it `constexpr`
+- If a function cannot return, mark it [[noreturn]]
+- Use pass-by-value for small objects
+- Use pass-by-const-reference to pass large values that you dont need to modify.
+- Return a result as a return value rather than modifying an object through an argument.
+- Use rvalue references to implement move and forwarding.
+- Pass a pointer if 'no object' is a valid alternative (and represent 'no object' by  `nullptr`)
+- Use pass-by-non-const-reference only if you have to
+- Use `const` extensively and consistently.
+- Assume that `char*` or a `const char*` argument points to a C-style string.
+- Avoid passing arrays as pointers.
+- Pass homogeneous list of unknown length as an `initializer_list<T>` (or as some other container)
+- Avoid unspecified numbers of arguments (...)
+- Use overloading when functions perform conceptually the same task on different types.
+- When overloading on integers, provide functions to eliminate common ambiguities.
+- Specify preconditions and postconditions for your functions.
+- Prefer function objects (including lambdas) and virtual functions to pointers to functions.
+- Avoid macros.
+- If you must use macros, use ugly names with lots of capital letters.
+
+---
+
 Glossary
 ---
 
