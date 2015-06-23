@@ -13,9 +13,19 @@ solving a specific set of problems [and] has five important features:"
 
 ---
 
+TODO
+---
+
+### Re-read
+- Pointers and References
+- Exception handling
+
+---
+
 Advices
 ---
 
+## 0011
 
 - Focus on programming techniques, not on language features.
 - Express ideas directly in code.
@@ -33,6 +43,8 @@ Advices
 - Use type and template aliases to provide a uniform notation for types that may vary among similar types or among implementations.
 
 ---
+
+## 0100
 
 - Don't reivent the wheel; use libraries.
 - When you have a choice; prefer the standard library over other libraries.
@@ -55,6 +67,8 @@ Advices
 
 ---
 
+## 0101
+
 - Use resource handles to manage resources (RAII)
 - Use `unique_ptr` to refer to objects of polymorphic type
 - Use `shared_ptr` to refer to shared objects
@@ -71,6 +85,8 @@ Advices
 - Properties of numeric types are accesible through `numeric_limits`
 
 ---
+
+## 0110
 
 - For the final word on lamgiage defomotopm ossies. see tje OSP C++ standard.
 - Avoid unspecified and undefined behavior
@@ -98,6 +114,8 @@ Advices
 
 ---
 
+## 0111
+
 - Keep use of pointers simple and straightforward.
 - Avoid nontrivial pointers arithmetic.
 - Take care not to write beyond the bounds of an array.
@@ -115,6 +133,8 @@ Advices
 
 ---
 
+## 1000
+
 - When compactness of data is important, lay out structure data members with larger members before smmaller ones.
 - Use bit-fields to represent hardware-imposed data layouts.
 - Dont naively try to optimize memory comsumption by packing several values into a single byte.
@@ -124,6 +144,8 @@ Advices
 - Define operations on enumerations for safe and simple use.
 
 ---
+
+## 1001
 
 - Dont declare a variable until you have a value to initialize it with.
 - Prefer a switch-statement to an if-statement when there is a choice.
@@ -139,6 +161,8 @@ Advices
 
 ---
 
+## 1010
+
 - Prefer the standard library to other libraries and to "handcrafted code"
 - Use character-level input only when you have to.
 - When reading, always consider ill-formed(badly formed) input.
@@ -150,6 +174,8 @@ Advices
 - Define symbolic constants to avoid "magic constants".
 
 ---
+
+## 1011
 
 - Prefer prefix `++` over suffix `++`.
 - Use resource handles to avoid leaks, premature deletion, and double deletion.
@@ -167,6 +193,8 @@ Advices
 - Consider using a run-time checked cast, such as `narrow_cast<>()`, for conversion between numeric types.
 
 ---
+
+## 1100
 
 - "Package" meaningful operations as carefully named `functions`.
 - A function should perform a single logical operation.
@@ -191,6 +219,43 @@ Advices
 - Prefer function objects (including lambdas) and virtual functions to pointers to functions.
 - Avoid macros.
 - If you must use macros, use ugly names with lots of capital letters.
+
+---
+
+## 1101
+
+- Develop an error-handling strategy early in a design.
+- Throw an exception to indicate that you cannot perform an assigned task.
+- Use exceptions for error handling.
+- Use purpose-designed user-defined types as exceptions (not built-in types)
+- If you for some reason cannot use exception, mimic them.
+- Use hierarchical error handling.
+- Keep the individual parts of error handling simple.
+- Dont try to catch every exception in every function.
+- Always provide the basic guarantee.
+- Provide the strong guarantee unless there is a reason not to.
+- Let a constructor estabilish an invariant, and throw if it cannot.
+- Release locally owned resources before throwing an exception.
+- Be sure that every resource acquired in a constructor is released when throwing an exception in that constructor.
+- Dont use exceptions where more local control structures will suffice.
+- Use the 'Resource Acquisiton Is Initialization' (RAII) and exception handlers to maintain invariants.
+- Prefer proper resource handles to the less structured `finally`.
+- Design your error-handling strategy around invariants.
+- What can be checked at compile time usually best checked at compile time (using `static_assert`)
+- Design your error-handling strategy to allow for different levels of checking/enforcement.
+- If your function may not throw, declare it `noexcept`
+- Dont use exception specification.
+- Catch exceptions that may be part of a hierarchy by reference.
+- Dont assume that every exception is derived from class `exception`.
+- Have `main()` catch and report all exceptions.
+- Dont destroy information before you have its replacement ready.
+- Leave operands in valid state before throwing an exception from an assignment.
+- Never let an exception espace from a destructor.
+- Keep ordinary code and error-handling code separate.
+- Beware of memory leakes caused by memory allocated by `new` not being released in cases of an exception.
+- Assume that every exception that can be thrown by a function will be thrown.
+- A library shouldnt unilaterally terminate a program. Instead, throw an exception and let a caller decide.
+- A library shouldnt produce diagnostic output aimed at an end user. Instead, throw an exception and let a caller decide.
 
 ---
 
