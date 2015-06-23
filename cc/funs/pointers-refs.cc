@@ -1,23 +1,39 @@
 #include <iostream>
+#include <vector>
 
 using namespace std;
 
 int main () {
-    char a { 'a' };
+    char val { 'a' };
+    char* a = &val;
+    char* b = &val;
 
-    char* b = &a;
+    cout << "Var b value - a value:\n";
+    cout << *b << " - " << a << "\n\n";
 
-    cout << *b << " - " << a << "\n";
+    cout << "changing val = 'b':\n";
+    val = 'b';
 
-    a = 'b';
+    cout << "Var b value - a value:\n";
+    cout << *b << " - " << a << "\n\n";
 
-    cout << *b << " - " << a << "\n";
-    cout << b << "\n";
+    cout << "b address:\n";
     cout << &b << "\n";
+
+    cout << "a address:\n";
+    cout << &a << "\n\n";
+
+    cout << "b first element address:\n";
+    cout << (void *) &b[0] << "\n";
+
+    cout << "a first element address:\n";
+    cout << (void *) &a[0] << "\n\n";
+
+    cout << "---\n";
 
     char* c = new char('a');
     char &d = *c;
-    
+
     cout << *c << " - " << d << "\n";
 
     *c = 'd';
@@ -79,7 +95,7 @@ int main () {
     cout << p4 << "\n";
 
     cout << "\n\n";
- 
+
     vector<int> v { 1, 5, 6 };
     vector<int> *p = &v;
 
@@ -94,5 +110,5 @@ int main () {
 
     for (auto &val : *p) {
         cout << val << "\n";
-    }    
+    }
 };

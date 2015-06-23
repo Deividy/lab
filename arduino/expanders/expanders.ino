@@ -71,9 +71,9 @@ void count_increment_and_print_current_state () {
     }
 
     prev_binary_count_time = current_time;
-    print_current_state();
-
     count++;
+
+    print_current_state();
 }
 
 void setup_acknowledge_led (byte i2c_bus_value) {
