@@ -259,6 +259,22 @@ Advices
 
 ---
 
+## 1110
+
+- Use namespaces to express logical structure.
+- Place every nonlocal name, except `main()`, in some namespace.
+- Design a namespace so that you can conveniently use it without accidentally gaining access to unrelated namespaces.
+- Avoid very short names for namespaces.
+- If necessary, use namespace aliases to abbreviate long namespace names.
+- Avoid placing heavy notational burdens on users of your namespaces.
+- Use separate namespaces for interfaaces and implementations
+- Use the `Namespace::member` notation when defining namespace members.
+- Use `inline` namespaces to support versioning.
+- Use `using-directives` for transition, for foundational libraries (such as `std`), or within a local scope.
+- Dont put a `using-directive` in a header file.
+
+---
+
 Glossary
 ---
 
