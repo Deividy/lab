@@ -275,6 +275,25 @@ Advices
 
 ---
 
+## 1111
+
+- Use header files to represent interfaces and to emphasize logical structure.
+- `#include` a header in the source file that implements its functions.
+- Dont define global entitie with the same name and similar-but-different meanings in different translation units.
+- Avoid non-inline function definitions in headers.
+- Use `#include` only at global scope and in namespaces.
+- `#include` only complete declarations.
+- Use include guards.
+- `#include` C headers in namespaces to avoide global names.
+- Make headers self-contained.
+- Distinguish bettween user' interfaces and implementers' interface.
+- Distinguish between averagens users' interfaces and expert users' interfaces.
+- Avoid nonlocal objects that require run-time initialization in code intended for use as part of non-C++ programs.
+
+
+
+---
+
 Glossary
 ---
 
