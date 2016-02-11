@@ -290,6 +290,24 @@ Advices
 - Distinguish between averagens users' interfaces and expert users' interfaces.
 - Avoid nonlocal objects that require run-time initialization in code intended for use as part of non-C++ programs.
 
+---
+
+## 10000
+
+- Represent concepts as classes.
+- Separate the interface of a class from its implementation.
+- Use public data (`structs`) only when it really is just data and no invariant is meaningful for the data members.
+- Define a constructor to handle initialization of objects.
+- By default declare single-argument constructors `explicit`.
+- Declare a member function that does not modify the state of its object `const`.
+- A concrete type is the simplest kind of class. Where applicable, prefer a concrete type over more complicated classes and over plain data structures.
+- Make a function a member only if it needs direct access to the representation of a class.
+- Use a namespace to make the association between a class and its helper functions explicit.
+- Use in-class initializers to avoid repetition in constructors.
+- Make a function that needs access to the representation of a class but needn't be called for a specific object a `static` member function.
+
+---
+
 
 
 ---
