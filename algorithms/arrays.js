@@ -1,6 +1,4 @@
 var assert = require('assert');
-
-
 Object.defineProperty(Array.prototype, 'minimum', {
     get: function () {
         var minimum = null;
