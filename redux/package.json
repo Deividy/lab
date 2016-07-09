@@ -1,0 +1,10 @@
+{
+    "name": "tests-redux",
+    "version": "1.0.0",
+    "description": "",
+    "main": "app.js",
+    "author": "",
+    "dependencies": {
+        "redux": ""
+    }
+}
