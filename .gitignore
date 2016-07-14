@@ -5,3 +5,5 @@ cache/
 libuv/bin
 cc/outs/*
 cc/*/outs/*
+
+*.log
