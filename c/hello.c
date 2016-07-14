@@ -1,7 +1,7 @@
 #include <stdio.h>
 
 void say_hello (char* name) {
-    printf("Hello, %s.\n", name);
+    printf("Hey, %s.\n", name);
 }
 
 int main () {
