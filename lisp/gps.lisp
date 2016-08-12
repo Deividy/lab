@@ -1,6 +1,6 @@
 (defvar *state* nil "current state")
 (defvar *ops* nil "list of available operators")
-
+;
 ; may find a more appropriated name? this is not the find-all of
 ; example book anymore
 (defun find-all (item sequence &key (test #'eql))
@@ -122,5 +122,4 @@
 
 
 (mapc #'convert-op *smoking-ops*)
-
 (print (gps '(have-will) '(stoned) *smoking-ops*))
