@@ -122,4 +122,5 @@
 
 
 (mapc #'convert-op *smoking-ops*)
+
 (print (gps '(have-will) '(stoned) *smoking-ops*))
