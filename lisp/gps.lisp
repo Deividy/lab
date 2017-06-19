@@ -1,10 +1,20 @@
 (defvar *state* nil "current state")
 (defvar *ops* nil "list of available operators")
-;
-; may find a more appropriated name? this is not the find-all of
-; example book anymore
-(defun find-all (item sequence &key (test #'eql))
-  (remove item sequence :test (complement test)))
+
+; find-all tests
+; (defun find-all (item sequence &key (test #'eql))
+;  (remove item sequence :test (complement test)))
+
+(defun find-all (item sequence &rest keyword-args
+                      &key (test #'eql) test-not &allow-other-keys)
+  "Find all those elements of sequence that match item, according to the
+  keywords. Doesnt alter sequence"
+  (if test-not
+    (apply #'remove item sequence
+           :test-not (complement test-not) keyword-args)
+    (apply #'remove item sequence
+           :test (complement test) keyword-args)))
+
 
 (defstruct op "operation"
   (action nil) (preconds nil) (add-list nil) (del-list nil))
@@ -31,32 +41,6 @@
     (setf *state* (set-difference *state* (op-del-list op)))
     (setf *state* (union *state* (op-add-list op)))
     t))
-
-; testing this gps!
-
-(defparameter *smoking-ops*
-  (list
-    (make-op :action 'smoke-weed
-             :preconds '(have-lighter have-weed)
-             :add-list '(stoned)
-             :del-list '(have-weed))
-
-    (make-op :action 'buy-weed
-             :preconds '(have-money)
-             :add-list '(have-weed)
-             :del-list '(have-money))
-
-    (make-op :action 'buy-lighter
-             :preconds '(have-money)
-             :add-list '(have-lighter)
-             :del-list '(have-money))
-
-    (make-op :action 'work
-             :preconds '(have-will)
-             :add-list '(have-money))))
-
-(print (gps '(have-will) '(stoned) *smoking-ops*))
-
 
 ; === new version!
 
@@ -121,5 +105,48 @@
               (op-add-list op)))))
 
 
-(mapc #'convert-op *smoking-ops*)
-(print (gps '(have-will) '(stoned) *smoking-ops*))
+(defun use (oplist)
+  "Use oplist as the default list of operators."
+  ;; Return something useful, but not too verbose:
+  ;; the number of operators.
+  (length (setf *ops* oplist)))
+
+(defun gps (state goals &optional (*ops* *ops*))
+  "General Problem Solver: from state, achieve goals using *ops*."
+  (remove-if #'atom (achieve-all (cons '(start) state) goals nil)))
+
+(defun print-gps (gps)
+  "prints gps result in each line"
+  (mapcar #'(lambda (action) (print action)) gps))
+
+;--------;
+;
+; testing this gps!
+
+; (defparameter *smoking-ops*
+;   (list
+;     (make-op :action 'smoke-weed
+;              :preconds '(have-lighter have-weed)
+;              :add-list '(stoned)
+;              :del-list '(have-weed))
+;
+;     (make-op :action 'buy-weed
+;              :preconds '(have-money)
+;              :add-list '(have-weed)
+;              :del-list '(have-money))
+;
+;     (make-op :action 'buy-lighter
+;              :preconds '(have-money)
+;              :add-list '(have-lighter)
+;              :del-list '(have-money))
+;
+;     (make-op :action 'work
+;              :preconds '(have-will)
+;              :add-list '(have-money))))
+;
+; (print '(will not solve))
+; (print (gps '(have-will) '(stoned) *smoking-ops*))
+;
+; (print '(now here you go))
+; (mapc #'convert-op *smoking-ops*)
+; (print (gps '(have-will) '(stoned) *smoking-ops*))
