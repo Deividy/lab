@@ -1,7 +1,7 @@
 defmodule S3.Puller do
   @base_cache_path "cache"
 
-  def list_all(bucket, prefix) do
+  def download_all_email_json(bucket, prefix) do
     ExAws.S3.list_objects(bucket, prefix: prefix)
     |> ExAws.request!()
     |> get_json_files_from_response()
@@ -18,7 +18,28 @@ defmodule S3.Puller do
   end
 
   def delete_s3_cached_files(bucket, prefix) do
+    File.ls("#{@base_cache_path}/#{prefix}")
+    |> (fn
+        ({ :ok, files }) ->
+          files
+          |> Enum.map(&("#{prefix}/#{&1}"))
+          |> delete_files(bucket)
 
+        ({ :error, :enoent }) -> { :ok }
+      end).()
+  end
+
+  defp delete_files([], _bucket), do: { :ok }
+  defp delete_files([ head | tail ], bucket) do
+    ExAws.S3.delete_object(bucket, head)
+    |> ExAws.request()
+    |> (fn
+      ({ :ok, _ }) -> nil
+      ({ :error, { :http_error, 404, _ }}) ->
+        IO.puts("File #{head}, not found in #{bucket}.")
+    end).()
+
+    delete_files(tail, bucket)
   end
 
   defp get_json_files_from_response(%{
