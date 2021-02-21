@@ -25,12 +25,13 @@ defmodule S3.Puller do
           |> Enum.map(&("#{prefix}/#{&1}"))
           |> delete_files(bucket)
 
-        ({ :error, :enoent }) -> { :ok }
+        ({ :error, :enoent }) -> { :ok, count: 0 }
       end).()
   end
 
-  defp delete_files([], _bucket), do: { :ok }
-  defp delete_files([ head | tail ], bucket) do
+  defp delete_files(file_list, bucket, count \\ 0)
+  defp delete_files([], _bucket, count), do: { :ok, count }
+  defp delete_files([ head | tail ], bucket, count) do
     ExAws.S3.delete_object(bucket, head)
     |> ExAws.request()
     |> (fn
@@ -39,7 +40,7 @@ defmodule S3.Puller do
         IO.puts("File #{head}, not found in #{bucket}.")
     end).()
 
-    delete_files(tail, bucket)
+    delete_files(tail, bucket, count + 1)
   end
 
   defp get_json_files_from_response(%{
