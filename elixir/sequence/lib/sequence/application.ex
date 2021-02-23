@@ -3,9 +3,12 @@ defmodule Sequence.Application do
   use Application
 
   def start(_type, _args) do
-    children = [ Sequence.Server ]
+    children = [
+      Sequence.Stash,
+      Sequence.Server,
+    ]
     opts = [
-      strategy: :one_for_one,
+      strategy: :rest_for_one,
       name: Sequence.Supervisor
     ]
 
