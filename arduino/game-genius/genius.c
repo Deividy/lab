@@ -216,7 +216,7 @@ void buttonLedRelease(int idx) {
     validateUserPlay(idx);
 };
 
-// Arduino' functions
+// Arduino functions
 void setup () {
     // init lcd
     lcd.begin(16, 2);
